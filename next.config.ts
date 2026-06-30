@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  allowedDevOrigins: ['sweet-hamster-legally.ngrok-free.app'],
+  serverExternalPackages: [],
 };
 
 export default nextConfig;
