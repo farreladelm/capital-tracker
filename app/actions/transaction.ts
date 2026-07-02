@@ -33,6 +33,7 @@ export async function updateTransaction(formData: FormData) {
   });
 
   revalidatePath("/");
+  revalidatePath("/history");
 }
 
 export async function deleteTransaction(formData: FormData) {
@@ -47,4 +48,37 @@ export async function deleteTransaction(formData: FormData) {
   });
 
   revalidatePath("/");
+  revalidatePath("/history");
+}
+
+export async function createTransaction(formData: FormData) {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "Unauthorized" };
+
+  const description = formData.get("description") as string;
+  const amountStr = formData.get("amount") as string;
+  const categoryId = formData.get("categoryId") as string;
+  const dateStr = formData.get("date") as string;
+
+  if (!description || !amountStr || !categoryId || !dateStr) return { error: "Missing fields" };
+
+  const amountMinor = Math.round(parseFloat(amountStr) * 100);
+
+  const category = await prisma.category.findUnique({ where: { id: categoryId } });
+  if (!category) return { error: "Category not found" };
+
+  await prisma.transaction.create({
+    data: {
+      userId: session.user.id,
+      description,
+      amountMinor,
+      categoryId,
+      type: category.type,
+      date: new Date(dateStr)
+    }
+  });
+
+  revalidatePath("/");
+  revalidatePath("/history");
+  return { success: true };
 }

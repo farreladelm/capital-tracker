@@ -24,15 +24,19 @@ export class AIParserError extends Error {
   }
 }
 
-export async function parseTransactionInput(input: string, currentUtcTime: string): Promise<ParsedTransaction[]> {
+export async function parseTransactionInput(input: string, currentUtcTime: string, categoryNames: string[] = []): Promise<ParsedTransaction[]> {
+  const categoryListStr = categoryNames.length > 0 ? categoryNames.join(", ") : "None provided";
+  
   const prompt = `
     You are an expert financial parsing assistant. Extract transaction details from the user's input.
     Current Server UTC Time: ${currentUtcTime}
+    Available Categories: ${categoryListStr}
 
     Rules:
     - If the input contains multiple distinct transactions (e.g., "coffee 5 and lunch 10"), return multiple objects.
     - If the amount is missing, return 0 for the amount.
     - Do NOT invent dates or amounts. Use the current UTC time for "today".
+    - Try to map the transaction to one of the Available Categories exactly. If none match, use 'Uncategorized' or the closest match.
     
     Input: "${input}"
   `;
@@ -70,11 +74,16 @@ export async function parseTransactionInput(input: string, currentUtcTime: strin
       throw new Error("Empty response from AI provider.");
     }
 
+    console.log("=== LLM API RESPONSE ===");
+    console.log(`Input: "${input}"`);
+    console.log(`Output: ${response.text}`);
+    console.log("========================");
+
     const json = JSON.parse(response.text);
     const parsed = ParserResponseSchema.parse(json);
 
     // Validate that we got a valid amount for at least one transaction
-    const validTransactions = parsed.transactions.filter((t: any) => t.amount > 0);
+    const validTransactions = parsed.transactions.filter((t) => t.amount > 0);
     
     if (validTransactions.length === 0) {
       throw new AIParserError("No valid amount detected in input.", "MISSING_AMOUNT");

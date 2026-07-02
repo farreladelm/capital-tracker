@@ -1,0 +1,353 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Balance - Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#fffbff",
+                    "on-secondary-container": "#616267",
+                    "background": "#fcf8ff",
+                    "on-primary-container": "#fffbff",
+                    "primary-fixed": "#e2dfff",
+                    "on-secondary-fixed-variant": "#45474b",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#e2e2e7",
+                    "primary": "#4c4bc6",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#464553",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#181a2f",
+                    "surface-container-highest": "#e4e1ec",
+                    "tertiary-fixed": "#e1e0fe",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#c6c6cb",
+                    "surface-dim": "#dcd8e3",
+                    "surface-container": "#f0ecf7",
+                    "outline": "#777585",
+                    "inverse-surface": "#303038",
+                    "on-primary-fixed-variant": "#3633af",
+                    "on-secondary-fixed": "#1a1c1f",
+                    "secondary": "#5d5e63",
+                    "surface-container-low": "#f5f2fd",
+                    "surface-tint": "#4f4ec8",
+                    "surface": "#fcf8ff",
+                    "on-primary-fixed": "#0b006b",
+                    "primary-container": "#6665e0",
+                    "primary-fixed-dim": "#c2c1ff",
+                    "surface-bright": "#fcf8ff",
+                    "on-surface": "#1b1b22",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#44455d",
+                    "inverse-on-surface": "#f3effa",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#dfdfe4",
+                    "surface-container-high": "#eae6f1",
+                    "tertiary-fixed-dim": "#c4c4e1",
+                    "outline-variant": "#c7c4d6",
+                    "surface-variant": "#e4e1ec",
+                    "tertiary": "#595a73",
+                    "inverse-primary": "#c2c1ff",
+                    "tertiary-container": "#72728c",
+                    "on-background": "#1b1b22"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-padding": "20px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "margin-page": "24px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "headline-md": ["Manrope"],
+                    "label-sm": ["Manrope"],
+                    "display": ["Manrope"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .soft-card-shadow {
+            box-shadow: 0 4px 20px rgba(76, 75, 198, 0.04);
+        }
+    </style>
+</head>
+<body class="font-body-md antialiased pb-24">
+<!-- TopAppBar (Hidden on Mobile) -->
+<header class="hidden md:flex justify-between items-center px-margin-page h-16 w-full z-50 fixed top-0 bg-background/80 backdrop-blur-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">Balance</span>
+</div>
+<div class="flex items-center gap-4">
+<a class="text-on-surface-variant hover:opacity-80 transition-opacity" href="#">Home</a>
+<a class="text-on-surface-variant hover:opacity-80 transition-opacity" href="#">History</a>
+<a class="text-primary font-semibold hover:opacity-80 transition-opacity" href="#">Trends</a>
+<a class="text-on-surface-variant hover:opacity-80 transition-opacity" href="#">Profile</a>
+</div>
+<button class="active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="pt-8 md:pt-24 px-margin-page max-w-4xl mx-auto flex flex-col gap-stack-lg">
+<!-- Header -->
+<section class="text-center md:text-left">
+<h1 class="font-display text-display text-on-surface">Analytics</h1>
+<p class="font-body-lg text-body-lg text-secondary mt-2">Your financial overview for this month.</p>
+</section>
+<!-- Insights Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Spending Trend (Line Chart) -->
+<div class="md:col-span-2 bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-headline-md text-headline-md text-on-surface">Spending Trend</h2>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-container px-3 py-1 rounded-full">This Month</span>
+</div>
+<div class="relative h-64 w-full">
+<canvas id="trendChart"></canvas>
+</div>
+</div>
+<!-- Category Distribution (Donut Chart) -->
+<div class="bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow flex flex-col">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6">Categories</h2>
+<div class="relative flex-grow flex items-center justify-center min-h-[200px]">
+<canvas id="categoryChart"></canvas>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="text-center">
+<span class="block font-headline-md text-headline-md text-on-surface">$1.2k</span>
+<span class="block font-label-sm text-label-sm text-secondary">Total</span>
+</div>
+</div>
+</div>
+<div class="mt-4 flex flex-col gap-2">
+<div class="flex items-center justify-between font-label-md text-label-md">
+<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-primary"></span><span class="text-on-surface">Food</span></div>
+<span class="text-secondary">40%</span>
+</div>
+<div class="flex items-center justify-between font-label-md text-label-md">
+<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-primary-container"></span><span class="text-on-surface">Transport</span></div>
+<span class="text-secondary">25%</span>
+</div>
+<div class="flex items-center justify-between font-label-md text-label-md">
+<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-tertiary-container"></span><span class="text-on-surface">Entertainment</span></div>
+<span class="text-secondary">20%</span>
+</div>
+<div class="flex items-center justify-between font-label-md text-label-md">
+<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-surface-variant"></span><span class="text-on-surface">Other</span></div>
+<span class="text-secondary">15%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Budget Progress Cards -->
+<section>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-md">Budgets</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Groceries -->
+<div class="bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow">
+<div class="flex justify-between items-center mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">shopping_cart</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface font-semibold">Groceries</h3>
+<p class="font-label-sm text-label-sm text-secondary">$320 left</p>
+</div>
+</div>
+<span class="font-body-md text-body-md text-on-surface">$180 / $500</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 36%"></div>
+</div>
+</div>
+<!-- Dining Out -->
+<div class="bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow">
+<div class="flex justify-between items-center mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 0;">restaurant</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface font-semibold">Dining Out</h3>
+<p class="font-label-sm text-label-sm text-error">$20 over</p>
+</div>
+</div>
+<span class="font-body-md text-body-md text-on-surface">$220 / $200</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2">
+<div class="bg-error h-2 rounded-full" style="width: 100%"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 h-20 bg-surface/80 backdrop-blur-xl rounded-t-xl shadow-[0_-4px_20px_rgba(0,0,0,0.04)] border-t-0">
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-primary/5 transition-colors active:scale-90 transition-transform duration-200 w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-primary/5 transition-colors active:scale-90 transition-transform duration-200 w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-1">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-primary/10 hover:bg-primary/20 transition-colors active:scale-90 transition-transform duration-200 w-14 h-14 rounded-full -mt-8 shadow-[0_4px_12px_rgba(76,75,198,0.2)]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-semibold hover:bg-primary/5 transition-colors active:scale-90 transition-transform duration-200 w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span class="font-label-sm text-label-sm mt-1">Trends</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-primary/5 transition-colors active:scale-90 transition-transform duration-200 w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Chart.js Configuration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trend Line Chart
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            
+            // Create gradient
+            let gradient = trendCtx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(76, 75, 198, 0.2)'); // primary color with opacity
+            gradient.addColorStop(1, 'rgba(76, 75, 198, 0)');
+            
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1', '5', '10', '15', '20', '25', '30'],
+                    datasets: [{
+                        label: 'Spending',
+                        data: [150, 300, 250, 400, 350, 600, 500],
+                        borderColor: '#4c4bc6', // primary color
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#4c4bc6',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#303038',
+                            titleFont: { family: 'Manrope', size: 12 },
+                            bodyFont: { family: 'Manrope', size: 14, weight: 'bold' },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: { font: { family: 'Manrope', size: 12 }, color: '#777585' }
+                        },
+                        y: {
+                            grid: { color: '#e4e1ec', drawBorder: false },
+                            ticks: { font: { family: 'Manrope', size: 12 }, color: '#777585', padding: 10 },
+                            beginAtZero: true
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                }
+            });
+
+            // Category Donut Chart
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Food', 'Transport', 'Entertainment', 'Other'],
+                    datasets: [{
+                        data: [40, 25, 20, 15],
+                        backgroundColor: [
+                            '#4c4bc6', // primary
+                            '#6665e0', // primary-container
+                            '#72728c', // tertiary-container
+                            '#e4e1ec'  // surface-variant
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#303038',
+                            titleFont: { family: 'Manrope', size: 12 },
+                            bodyFont: { family: 'Manrope', size: 14 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body></html>

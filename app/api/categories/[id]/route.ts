@@ -35,6 +35,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
     return NextResponse.json(updated);
   } catch (error) {
+    console.error("[category PATCH API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
   }
 }
@@ -66,6 +67,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
+    console.error("[category DELETE API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
   }
 }

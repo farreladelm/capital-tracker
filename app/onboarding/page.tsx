@@ -16,11 +16,11 @@ export default async function OnboardingPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+    <div className="flex min-h-screen flex-col items-center justify-center p-4 relative z-0">
+      <div className="w-full max-w-lg rounded bg-surface-container-low border-[1.5px] border-outline-variant p-8 sm:p-12 shadow-sm relative z-10">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Welcome! 🎉</h1>
-          <p className="text-slate-500 mt-2">Let's set up your tracker. Pick your default currency.</p>
+          <h1 className="text-[32px] font-headline font-bold text-on-surface tracking-tight">Welcome! 🎉</h1>
+          <p className="text-on-surface-variant font-body mt-2">Let&apos;s set up your tracker. Pick your default currency.</p>
         </div>
         
         <form action={completeOnboarding} className="flex flex-col gap-6">
@@ -36,28 +36,29 @@ export default async function OnboardingPage() {
               { code: "INR", symbol: "₹" },
               { code: "SGD", symbol: "S$" },
             ].map((c) => (
-              <label key={c.code} className="cursor-pointer">
+              <label key={c.code} className="cursor-pointer group">
                 <input type="radio" name="currency" value={c.code} className="peer sr-only" required />
-                <div className="rounded-xl border-2 border-slate-100 p-4 text-center transition-all peer-checked:border-blue-500 peer-checked:bg-blue-50 hover:bg-slate-50">
-                  <div className="text-2xl font-bold text-slate-800">{c.symbol}</div>
-                  <div className="text-sm font-medium text-slate-500">{c.code}</div>
+                <div className="rounded border-[1.5px] border-outline-variant p-4 text-center transition-colors peer-checked:border-primary peer-checked:bg-surface-container-high group-hover:bg-surface-container-high bg-surface">
+                  <div className="text-2xl font-headline font-bold text-on-surface">{c.symbol}</div>
+                  <div className="text-xs font-label tracking-wider text-on-surface-variant mt-1">{c.code}</div>
                 </div>
               </label>
             ))}
           </div>
 
-          <div className="rounded-lg bg-blue-50 p-4 text-sm text-blue-700">
-            <strong>Note:</strong> This becomes your permanent base currency and cannot be changed later.
+          <div className="rounded bg-surface-container-high p-4 text-sm font-body text-on-surface-variant border-[1.5px] border-outline-variant">
+            <strong className="text-on-surface">Note:</strong> This becomes your permanent base currency and cannot be changed later.
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-blue-600 py-4 font-semibold text-white shadow-md transition-all hover:bg-blue-700 active:scale-95"
+            className="w-full rounded bg-primary py-4 font-headline font-bold text-on-primary transition-colors hover:bg-primary-container hover:text-on-primary-container active-press"
           >
             Start Tracking
           </button>
         </form>
       </div>
+
     </div>
   );
 }

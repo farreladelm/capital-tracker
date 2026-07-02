@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from "date-fns";
+import type { TransactionModel as Transaction, CategoryModel as Category } from "@/generated/prisma/models";
+
+type TransactionWithCategory = Transaction & {
+  category: Category;
+};
 
 export async function GET(req: Request) {
   try {
@@ -42,7 +47,7 @@ export async function GET(req: Request) {
     let totalExpense = 0;
     const categorySums: Record<string, { name: string; amount: number; color: string }> = {};
 
-    transactions.forEach((txn: any) => {
+    (transactions as unknown as TransactionWithCategory[]).forEach((txn) => {
       if (txn.type === "INCOME") {
         totalIncome += txn.amountMinor;
       } else {

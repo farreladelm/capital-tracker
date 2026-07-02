@@ -19,9 +19,23 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const cursor = searchParams.get("cursor");
     const limit = parseInt(searchParams.get("limit") || "20");
+    const type = searchParams.get("type");
+    const search = searchParams.get("search");
+
+    const whereClause: {
+      userId: string;
+      type?: "INCOME" | "EXPENSE";
+      description?: { contains: string; mode: string };
+    } = { userId: session.user.id };
+    if (type && (type === "INCOME" || type === "EXPENSE")) {
+      whereClause.type = type;
+    }
+    if (search) {
+      whereClause.description = { contains: search, mode: "insensitive" };
+    }
 
     const transactions = await prisma.transaction.findMany({
-      where: { userId: session.user.id },
+      where: whereClause,
       take: limit + 1, // Fetch one extra to check if there's a next page
       cursor: cursor ? { id: cursor } : undefined,
       orderBy: { date: "desc" },
@@ -39,6 +53,7 @@ export async function GET(req: Request) {
       nextCursor,
     });
   } catch (error) {
+    console.error("[transactions GET API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
   }
 }
@@ -78,6 +93,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(transaction);
   } catch (error) {
+    console.error("[transactions POST API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
   }
 }

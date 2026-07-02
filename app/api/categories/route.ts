@@ -10,18 +10,25 @@ const CategorySchema = z.object({
   icon: z.string().min(1).max(10), // Emojis
 });
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const session = await auth();
     if (!session?.user?.id) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
-    const categories = await prisma.category.findMany({
-      where: { userId: session.user.id },
-      orderBy: { name: "asc" },
-    });
+    const [categories, user] = await Promise.all([
+      prisma.category.findMany({
+        where: { userId: session.user.id },
+        orderBy: { name: "asc" },
+      }),
+      prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { currency: true },
+      })
+    ]);
 
-    return NextResponse.json({ categories });
+    return NextResponse.json({ categories, currency: user?.currency || "USD" });
   } catch (error) {
+    console.error("[categories GET API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
   }
 }
@@ -56,6 +63,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(category);
   } catch (error) {
+    console.error("[categories POST API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
   }
 }

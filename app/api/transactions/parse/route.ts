@@ -4,6 +4,7 @@ import { parseTransactionInput, AIParserError } from "@/lib/services/aiParser";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import type { CategoryModel as Category } from "@/generated/prisma/models";
 
 const RequestSchema = z.object({
   input: z.string().min(1).max(255),
@@ -31,15 +32,16 @@ export async function POST(req: Request) {
 
     const currentUtcTime = new Date().toISOString();
     
-    // Attempt AI Parsing
-    const parsedTransactions = await parseTransactionInput(result.data.input, currentUtcTime);
-
-    // Fetch user's categories to map the AI's string output to real Category IDs
-    const userCategories = await prisma.category.findMany({
+    // Fetch user's categories to pass to the AI parser
+    const userCategories = (await prisma.category.findMany({
       where: { userId },
-    });
+    })) as Category[];
+    const categoryNames = userCategories.map((c) => c.name);
 
-    const defaultCategory = userCategories.find((c: any) => c.name.toLowerCase() === "uncategorized");
+    // Attempt AI Parsing
+    const parsedTransactions = await parseTransactionInput(result.data.input, currentUtcTime, categoryNames);
+
+    const defaultCategory = userCategories.find((c) => c.name.toLowerCase() === "uncategorized");
     const fallbackCategoryId = defaultCategory ? defaultCategory.id : userCategories[0]?.id;
 
     if (!fallbackCategoryId) {
@@ -51,7 +53,7 @@ export async function POST(req: Request) {
     const savedTransactions = [];
     for (const parsed of parsedTransactions) {
       // Find exact or closest match, ignore case
-      const matchedCategory = userCategories.find((c: any) => c.name.toLowerCase() === parsed.category.toLowerCase());
+      const matchedCategory = userCategories.find((c) => c.name.toLowerCase() === parsed.category.toLowerCase());
       const finalCategoryId = matchedCategory ? matchedCategory.id : fallbackCategoryId;
       
       // Ensure transaction type matches category type if we found a match, else trust the AI type

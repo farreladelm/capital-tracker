@@ -5,7 +5,7 @@ import { register } from "@/app/actions/auth";
 
 export default function RegisterForm() {
   const [state, action, isPending] = useActionState(
-    async (prevState: any, formData: FormData) => {
+    async (prevState: unknown, formData: FormData) => {
       return await register(formData);
     },
     null
@@ -14,24 +14,24 @@ export default function RegisterForm() {
   return (
     <form action={action} className="flex flex-col gap-4">
       {state?.error && (
-        <div className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
+        <div className="rounded bg-error-container p-3 text-sm font-body text-on-error-container">
           {state.error}
         </div>
       )}
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-600">
+        <label className="mb-1 block text-xs font-label uppercase tracking-wider text-on-surface-variant">
           Name
         </label>
         <input
           name="name"
           type="text"
           disabled={isPending}
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="w-full rounded border-[1.5px] border-outline-variant bg-surface px-4 py-3 font-body text-on-surface focus:border-primary focus:outline-none transition-colors"
           placeholder="Optional"
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-600">
+        <label className="mb-1 block text-xs font-label uppercase tracking-wider text-on-surface-variant">
           Email
         </label>
         <input
@@ -39,11 +39,11 @@ export default function RegisterForm() {
           type="email"
           required
           disabled={isPending}
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="w-full rounded border-[1.5px] border-outline-variant bg-surface px-4 py-3 font-body text-on-surface focus:border-primary focus:outline-none transition-colors"
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-600">
+        <label className="mb-1 block text-xs font-label uppercase tracking-wider text-on-surface-variant">
           Password
         </label>
         <input
@@ -52,13 +52,13 @@ export default function RegisterForm() {
           required
           minLength={6}
           disabled={isPending}
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="w-full rounded border-[1.5px] border-outline-variant bg-surface px-4 py-3 font-body text-on-surface focus:border-primary focus:outline-none transition-colors"
         />
       </div>
       <button
         type="submit"
         disabled={isPending}
-        className="mt-2 w-full rounded-xl bg-blue-600 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 active:scale-95 disabled:opacity-50"
+        className="mt-2 w-full rounded bg-primary py-3 font-headline font-bold text-on-primary transition-colors hover:bg-primary-container hover:text-on-primary-container active-press disabled:opacity-50"
       >
         {isPending ? "Creating account..." : "Create Account"}
       </button>

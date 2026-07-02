@@ -1,0 +1,263 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Balance - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-container": "#fffbff",
+                      "on-secondary-container": "#616267",
+                      "background": "#fcf8ff",
+                      "on-primary-container": "#fffbff",
+                      "primary-fixed": "#e2dfff",
+                      "on-secondary-fixed-variant": "#45474b",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#e2e2e7",
+                      "primary": "#4c4bc6",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-surface-variant": "#464553",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed": "#181a2f",
+                      "surface-container-highest": "#e4e1ec",
+                      "tertiary-fixed": "#e1e0fe",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#c6c6cb",
+                      "surface-dim": "#dcd8e3",
+                      "surface-container": "#f0ecf7",
+                      "outline": "#777585",
+                      "inverse-surface": "#303038",
+                      "on-primary-fixed-variant": "#3633af",
+                      "on-secondary-fixed": "#1a1c1f",
+                      "secondary": "#5d5e63",
+                      "surface-container-low": "#f5f2fd",
+                      "surface-tint": "#4f4ec8",
+                      "surface": "#fcf8ff",
+                      "on-primary-fixed": "#0b006b",
+                      "primary-container": "#6665e0",
+                      "primary-fixed-dim": "#c2c1ff",
+                      "surface-bright": "#fcf8ff",
+                      "on-surface": "#1b1b22",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#44455d",
+                      "inverse-on-surface": "#f3effa",
+                      "on-error": "#ffffff",
+                      "secondary-container": "#dfdfe4",
+                      "surface-container-high": "#eae6f1",
+                      "tertiary-fixed-dim": "#c4c4e1",
+                      "outline-variant": "#c7c4d6",
+                      "surface-variant": "#e4e1ec",
+                      "tertiary": "#595a73",
+                      "inverse-primary": "#c2c1ff",
+                      "tertiary-container": "#72728c",
+                      "on-background": "#1b1b22"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-padding": "20px",
+                      "gutter": "16px",
+                      "stack-sm": "8px",
+                      "stack-lg": "32px",
+                      "margin-page": "24px",
+                      "stack-md": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Manrope"],
+                      "label-md": ["Manrope"],
+                      "body-md": ["Manrope"],
+                      "headline-lg-mobile": ["Manrope"],
+                      "headline-md": ["Manrope"],
+                      "label-sm": ["Manrope"],
+                      "display": ["Manrope"],
+                      "body-lg": ["Manrope"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .soft-card-shadow {
+            box-shadow: 0 4px 20px rgba(89, 90, 115, 0.05); /* Soft shadow using tertiary base */
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24 font-body-md antialiased md:hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-background/80 dark:bg-background/80 backdrop-blur-xl fixed top-0 w-full flex justify-between items-center px-margin-page h-16 w-full z-50 bg-transparent flat no shadows">
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">account_balance_wallet</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Balance</h1>
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">notifications</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="pt-24 px-margin-page flex flex-col gap-stack-lg">
+<!-- Greeting & Balance -->
+<section class="flex flex-col gap-stack-sm items-center text-center relative p-6 backdrop-blur-md bg-white/5 border border-white/20 shadow-2xl rounded-3xl"><div class="absolute inset-0 -z-10 overflow-hidden rounded-3xl"><div class="absolute top-[-20%] left-[-10%] w-[120%] h-[140%] opacity-40 blur-[80px]" style="background: radial-gradient(circle at 20% 30%, #5D5FEF 0%, transparent 50%), radial-gradient(circle at 80% 20%, #E2DFFF 0%, transparent 50%), radial-gradient(circle at 50% 80%, #FF8E8E 0%, transparent 50%);"></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div></div>
+<p class="font-body-md text-body-md text-secondary font-medium">Good morning, Alex</p>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm uppercase tracking-wider mb-1 text-secondary">Total Spent This Month</span>
+<h2 class="font-display text-display text-on-background drop-shadow-sm">$2,450.00</h2>
+</div>
+<!-- Budget Bar -->
+<div class="w-full mt-4 bg-surface-container-high rounded-full h-2 overflow-hidden relative">
+<div class="absolute top-0 left-0 h-full bg-primary rounded-full w-3/4"></div>
+</div>
+<div class="flex justify-between w-full mt-2">
+<span class="font-label-sm text-label-sm text-secondary">75% of budget</span>
+<span class="font-label-sm text-label-sm text-secondary">$850 remaining</span>
+</div>
+</section>
+<!-- Inspiration Images (Hidden in UI but present in DOM) -->
+<div class="hidden">
+<img alt="Style Inspiration 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCayRKM1yHq972O5fhHH4K7dcylXD8yNQ7C160UiEvVTiXONocCPR6WMwVgVaoFiC2MY25vMaMvU-h42exIfNVWZPxUuWNNDpXV9uk6t3daFqwV3J-iDprKmBem8aOa2tu1ul9JQIG0aPHB_Ki8ZGV8mo6flVODe4HwyZzdrx87RWTSf5VDmkaxOoaVWyHud4DI-uIBm2YSKc-1V27gDccPK-4P9M30Tcl0QtN_gbBx0Q7NhplfKOnkMqLbnVMWTeExxkl44unSIB8" class="">
+<img alt="Style Inspiration 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD6bLyFczAdyBHGmeRQNbPFRGd9TSZwVzTw_74QzXnHw4hpdhZ9aJfldfOGhrmTvdbUMUM7fKTv4ejcDJgtpAKmN9CxzzReAeRRxc30wPnivG35pZCxmVQqATPuMcDN_bleNGPIIcCqNi_ddRmYEi6JKAIV1LgYIIiBeazE8xr33ZaUWbldslCwF7uWbnQf2oS2AiFxZLD9GizKBHwo9WI35wyzlqczMSPS70vu8YNxC6D2E2tvehL_g2R0EbP9VQwPf7s4M38Kfc" class="">
+</div>
+<!-- Bento Grid: Categories & Insights -->
+<div class="absolute left-0 w-full h-64 -z-10 opacity-20 pointer-events-none"><svg class="w-full h-full" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,218.7C960,235,1056,213,1152,186.7C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="#4c4bc6"></path></svg></div><section class="grid grid-cols-2 gap-gutter">
+<!-- Categories Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow flex flex-col justify-between h-40">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">pie_chart</span>
+<span class="font-label-md text-label-md font-semibold text-primary">Categories</span>
+</div>
+<div>
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-sm text-label-sm text-secondary">Food &amp; Dining</span>
+<span class="font-label-sm text-label-sm text-on-background font-semibold">$840</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="h-full bg-tertiary rounded-full w-[40%]"></div>
+</div>
+<div class="flex justify-between items-end mt-3 mb-1">
+<span class="font-label-sm text-label-sm text-secondary">Transport</span>
+<span class="font-label-sm text-label-sm text-on-background font-semibold">$320</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="h-full bg-tertiary-container rounded-full w-[25%]"></div>
+</div>
+</div>
+</div>
+<!-- Weekly Trend Card -->
+<div class="bg-primary text-on-primary rounded-xl p-container-padding soft-card-shadow flex flex-col justify-between h-40 relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+<div class="flex items-center gap-2 relative z-10">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">trending_down</span>
+<span class="font-label-md text-label-md font-semibold">Weekly Trend</span>
+</div>
+<div class="relative z-10">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile mb-1">-12%</h3>
+<p class="font-label-sm text-label-sm text-on-primary/80 leading-tight">You're spending less than last week.</p>
+</div>
+</div>
+</section>
+<!-- Recent Transactions -->
+<section class="flex flex-col gap-stack-md">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-background">Recent</h3>
+<button class="font-label-md text-label-md text-primary">See all</button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl soft-card-shadow flex flex-col overflow-hidden px-4">
+<!-- Transaction 1 -->
+<div class="flex items-center justify-between py-4 border-b border-surface-variant last:border-b-0">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">local_cafe</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-background">Starbucks</span>
+<span class="font-label-sm text-label-sm text-secondary">Food &amp; Drink • Today, 8:42 AM</span>
+</div>
+</div>
+<span class="font-body-md text-body-md font-semibold text-error">-$5.40</span>
+</div>
+<!-- Transaction 2 -->
+<div class="flex items-center justify-between py-4 border-b border-surface-variant last:border-b-0">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">directions_car</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-background">Uber</span>
+<span class="font-label-sm text-label-sm text-secondary">Transport • Yesterday, 6:15 PM</span>
+</div>
+</div>
+<span class="font-body-md text-body-md font-semibold text-error">-$24.50</span>
+</div>
+<!-- Transaction 3 -->
+<div class="flex items-center justify-between py-4 border-b border-surface-variant last:border-b-0">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed-dim flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">movie</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-background">Netflix</span>
+<span class="font-label-sm text-label-sm text-secondary">Entertainment • Oct 12</span>
+</div>
+</div>
+<span class="font-body-md text-body-md font-semibold text-error">-$15.99</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 h-20 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl rounded-t-xl bg-surface dark:bg-inverse-surface shadow-[0_-4px_20px_rgba(76,75,198,0.06)] shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-semibold hover:bg-primary/5 transition-colors active:scale-90 transition-transform duration-200 w-16 rounded-lg py-1" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: &quot;FILL&quot; 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<!-- History -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-primary/5 transition-colors active:scale-90 transition-transform duration-200 w-16 rounded-lg py-1" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: &quot;FILL&quot; 0;">receipt_long</span>
+<span class="font-label-sm text-label-sm">History</span>
+</a>
+<!-- Add (FAB Embedded) -->
+<a class="flex flex-col items-center justify-center -mt-6" href="#">
+<div class="w-14 h-14 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-transform duration-200 hover:opacity-90 animate-pulse">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: &quot;FILL&quot; 0;">add</span>
+</div>
+<!-- Empty label text from JSON -->
+</a>
+<!-- Trends -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-primary/5 transition-colors active:scale-90 transition-transform duration-200 w-16 rounded-lg py-1" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: &quot;FILL&quot; 0;">insights</span>
+<span class="font-label-sm text-label-sm">Trends</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-primary/5 transition-colors active:scale-90 transition-transform duration-200 w-16 rounded-lg py-1" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: &quot;FILL&quot; 0;">settings</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+
+
+</body></html>

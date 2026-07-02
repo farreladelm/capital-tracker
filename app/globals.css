@@ -1,24 +1,140 @@
 @import "tailwindcss";
 
-@theme {
-  --animate-shake: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+@custom-variant dark (&:where(.dark, .dark *));
 
-  @keyframes shake {
-    10%, 90% {
-      transform: translate3d(-1px, 0, 0);
-    }
-    20%, 80% {
-      transform: translate3d(2px, 0, 0);
-    }
-    30%, 50%, 70% {
-      transform: translate3d(-4px, 0, 0);
-    }
-    40%, 60% {
-      transform: translate3d(4px, 0, 0);
-    }
-  }
+@theme {
+  --color-on-tertiary-container: #fffbff;
+  --color-on-secondary-container: #616267;
+  --color-background: #fcf8ff;
+  --color-on-primary-container: #fffbff;
+  --color-primary-fixed: #e2dfff;
+  --color-on-secondary-fixed-variant: #45474b;
+  --color-error-container: #ffdad6;
+  --color-secondary-fixed: #e2e2e7;
+  --color-primary: #4c4bc6;
+  --color-on-tertiary: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-error: #ba1a1a;
+  --color-on-surface-variant: #464553;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-tertiary-fixed: #181a2f;
+  --color-surface-container-highest: #e4e1ec;
+  --color-tertiary-fixed: #e1e0fe;
+  --color-on-primary: #ffffff;
+  --color-secondary-fixed-dim: #c6c6cb;
+  --color-surface-dim: #dcd8e3;
+  --color-surface-container: #f0ecf7;
+  --color-outline: #777585;
+  --color-inverse-surface: #303038;
+  --color-on-primary-fixed-variant: #3633af;
+  --color-on-secondary-fixed: #1a1c1f;
+  --color-secondary: #5d5e63;
+  --color-surface-container-low: #f5f2fd;
+  --color-surface-tint: #4f4ec8;
+  --color-surface: #fcf8ff;
+  --color-on-primary-fixed: #0b006b;
+  --color-primary-container: #6665e0;
+  --color-primary-fixed-dim: #c2c1ff;
+  --color-surface-bright: #fcf8ff;
+  --color-on-surface: #1b1b22;
+  --color-on-error-container: #93000a;
+  --color-on-tertiary-fixed-variant: #44455d;
+  --color-inverse-on-surface: #f3effa;
+  --color-on-error: #ffffff;
+  --color-secondary-container: #dfdfe4;
+  --color-surface-container-high: #eae6f1;
+  --color-tertiary-fixed-dim: #c4c4e1;
+  --color-outline-variant: #c7c4d6;
+  --color-surface-variant: #e4e1ec;
+  --color-tertiary: #595a73;
+  --color-inverse-primary: #c2c1ff;
+  --color-tertiary-container: #72728c;
+  --color-on-background: #1b1b22;
+
+  --radius: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  --spacing-container-padding: 20px;
+  --spacing-gutter: 16px;
+  --spacing-stack-sm: 8px;
+  --spacing-stack-lg: 32px;
+  --spacing-margin-page: 24px;
+  --spacing-stack-md: 16px;
+  --spacing-margin-mobile: 24px;
+  --spacing-margin-desktop: 24px;
+
+  --font-headline-lg: var(--font-manrope), 'Manrope', sans-serif;
+  --font-label-md: var(--font-manrope), 'Manrope', sans-serif;
+  --font-body-md: var(--font-manrope), 'Manrope', sans-serif;
+  --font-headline-lg-mobile: var(--font-manrope), 'Manrope', sans-serif;
+  --font-headline-md: var(--font-manrope), 'Manrope', sans-serif;
+  --font-label-sm: var(--font-manrope), 'Manrope', sans-serif;
+  --font-display: var(--font-manrope), 'Manrope', sans-serif;
+  --font-body-lg: var(--font-manrope), 'Manrope', sans-serif;
 }
 
 body {
-  background-color: #f8fafc; /* slate-50 */
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-body-md);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.soft-card-shadow {
+  box-shadow: 0 4px 20px rgba(89, 90, 115, 0.05);
+}
+
+@layer components {
+  /* ── Typography scale ───────────────────────────────────────────────────
+     These classes define the design-system type roles. They live in
+     @layer components so any Tailwind utility added alongside them
+     (e.g. "font-label-md text-xs font-semibold") reliably wins —
+     utilities are resolved in @layer utilities, which is higher priority.
+  ── */
+  .font-display          { font-family: var(--font-display);            font-size: 40px; line-height: 48px; letter-spacing: -0.02em; font-weight: 700; }
+  .font-headline-lg      { font-family: var(--font-headline-lg);        font-size: 32px; line-height: 40px; letter-spacing: -0.01em; font-weight: 600; }
+  .font-headline-lg-mobile { font-family: var(--font-headline-lg-mobile); font-size: 24px; line-height: 32px;                         font-weight: 600; }
+  .font-headline-md      { font-family: var(--font-headline-md);        font-size: 20px; line-height: 28px;                           font-weight: 600; }
+  .font-body-lg          { font-family: var(--font-body-lg);            font-size: 18px; line-height: 26px;                           font-weight: 400; }
+  .font-body-md          { font-family: var(--font-body-md);            font-size: 16px; line-height: 24px;                           font-weight: 400; }
+  .font-label-md         { font-family: var(--font-label-md);           font-size: 14px; line-height: 20px; letter-spacing: 0.01em;   font-weight: 500; }
+  .font-label-sm         { font-family: var(--font-label-sm);           font-size: 12px; line-height: 16px; letter-spacing: 0.05em;   font-weight: 600; }
+
+  /* ── Shorthand aliases ──────────────────────────────────────────────────
+     Convenience aliases for when size/weight are intentionally overridden
+     via utilities — these only lock in the font-family.
+  ── */
+  .font-headline { font-family: var(--font-headline-lg); }
+  .font-label    { font-family: var(--font-label-md);    }
+  .font-body     { font-family: var(--font-body-md);     }
+}
+
+.active-press:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease-out;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.search-input-wrapper {
+  border: 1.5px solid var(--color-outline-variant);
+  transition: border-color 0.15s ease;
+}
+
+.search-input-wrapper:focus-within {
+  border-color: var(--color-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .active-press:active {
+    transform: none;
+  }
 }
