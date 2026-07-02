@@ -38,8 +38,8 @@ export function TransactionList({ initialTransactions, categories, currency, sho
   if (initialTransactions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-10 text-on-surface-variant">
-        <p className="font-body">No transactions yet.</p>
-        <p className="text-sm font-body">Type in the box below to log your first one!</p>
+        <p className="font-body font-semibold">No transactions yet.</p>
+        <p className="text-sm font-body text-on-secondary-container">Click the "+" button to add one.</p>
       </div>
     );
   }

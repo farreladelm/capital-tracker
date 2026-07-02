@@ -54,6 +54,11 @@ node_modules/
 # Scripts
 /scripts
 
+# SQLite local database
+*.db
+*.db-wal
+*.db-shm
+
 # Agent Settings
 /.gemini
 /.gemini_security
