@@ -39,6 +39,6 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Action**: If changes are ready to be E2E tested, ask the user to run them for you and report the results.
 - **Rationale**: Playwright runs produce large console logs and consume substantial token counts.
 
-
-
-
+## Git Commit Restrictions
+- **Rule**: Never run `git commit` automatically.
+- **Details**: Do not perform automatic git commits. After completing an implementation, bug fix, or execution, ask the user if they would like to commit the changes. Only proceed with the commit if the user explicitly instructs you to do so.

@@ -34,7 +34,7 @@ export function TransactionCard({
   if (showDate) {
     const d = new Date(txn.date);
     if (isToday(d)) {
-      dateText = format(d, "HH.mm");
+      dateText = "Today";
     } else if (isYesterday(d)) {
       dateText = "Yesterday";
     } else {
