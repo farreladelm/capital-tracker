@@ -25,4 +25,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Anti-References**: Avoid neon dark mode SaaS visual clichés, gray-on-gray low-contrast text, nested cards, and heavy multi-input forms.
 - **References**: Always follow the specifications in [PRODUCT.md](file:///home/milo/personal-project/capital-tracker/PRODUCT.md) and [docs/DESIGN.md](file:///home/milo/personal-project/capital-tracker/docs/DESIGN.md).
 
+## Test Suite Runner Isolation
+- **Rule**: Separate browser E2E tests from unit tests. E2E browser tests must be placed in `tests/e2e/` (run via Playwright). Unit/Service layer tests must be placed in `tests/unit/` (run via Vitest) to avoid ESM compilation and `import.meta` conflicts inside Playwright.
+
+## Next.js Cache Revalidation
+- **Rule**: Avoid using global layout revalidations like `revalidatePath("/", "layout")` inside Server Actions or API routes. This invalidates the entire Turbopack compile cache in development mode, causing slow page compiles and E2E test timeouts. Instead, use targeted revalidations (e.g., `revalidatePath("/")` and `revalidatePath("/history")`).
+
+## API & Service Layer Architecture
+- **Rule**: Keep API route handlers lean. Do not write business logic or database queries (Prisma) directly inside the route files. Instead, extract them to a dedicated service class in `lib/services/` (e.g., `budget.service.ts` or `expense.service.ts`). API route handlers must handle only HTTP protocol concerns (request/response serialization, Zod payload schema validation, and status codes).
+
+
 
