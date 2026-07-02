@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { parseTransactionInput, AIParserError } from "@/lib/services/aiParser";
+import { AIParserError } from "@/lib/services/aiParser";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
-import type { CategoryModel as Category } from "@/generated/prisma/models";
+import { TransactionService } from "@/lib/services/transaction.service";
 
 const RequestSchema = z.object({
   input: z.string().min(1).max(255),
@@ -30,59 +29,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "VALIDATION_FAILED" }, { status: 400 });
     }
 
-    const currentUtcTime = new Date().toISOString();
-    
-    // Fetch user's categories to pass to the AI parser
-    const userCategories = (await prisma.category.findMany({
-      where: { userId },
-    })) as Category[];
-    const categoryNames = userCategories.map((c) => c.name);
-
-    // Attempt AI Parsing
-    const parsedTransactions = await parseTransactionInput(result.data.input, currentUtcTime, categoryNames);
-
-    const defaultCategory = userCategories.find((c) => c.name.toLowerCase() === "uncategorized");
-    const fallbackCategoryId = defaultCategory ? defaultCategory.id : userCategories[0]?.id;
-
-    if (!fallbackCategoryId) {
-      // User hasn't finished onboarding or categories aren't provisioned
-      return NextResponse.json({ error: "NO_CATEGORIES_FOUND" }, { status: 400 });
-    }
-
-    // Save transactions
-    const savedTransactions = [];
-    for (const parsed of parsedTransactions) {
-      // Find exact or closest match, ignore case
-      const matchedCategory = userCategories.find((c) => c.name.toLowerCase() === parsed.category.toLowerCase());
-      const finalCategoryId = matchedCategory ? matchedCategory.id : fallbackCategoryId;
-      
-      // Ensure transaction type matches category type if we found a match, else trust the AI type
-      const finalType = matchedCategory ? matchedCategory.type : parsed.type;
-
-      // Convert decimal amount to minor unit (e.g. 15.50 -> 1550 for USD)
-      // Since amountMinor is an int, we multiply by 100 as a simple heuristic for standard currencies. 
-      // In a real app we'd fetch the user's currency and determine the multiplier.
-      const multiplier = 100; // Hardcoded to 100 for v1 MVP
-      const amountMinor = Math.round(parsed.amount * multiplier);
-
-      const txn = await prisma.transaction.create({
-        data: {
-          userId,
-          categoryId: finalCategoryId,
-          type: finalType,
-          amountMinor,
-          description: parsed.description,
-          date: new Date(parsed.date),
-        }
-      });
-      savedTransactions.push(txn);
-    }
-
+    const savedTransactions = await TransactionService.parseAndSaveTransactions(userId, result.data.input);
     return NextResponse.json({ transactions: savedTransactions });
-
   } catch (error) {
     if (error instanceof AIParserError) {
       return NextResponse.json({ error: error.code, message: error.message }, { status: 400 });
+    }
+    if (error instanceof Error && error.message === "NO_CATEGORIES_FOUND") {
+      return NextResponse.json({ error: "NO_CATEGORIES_FOUND" }, { status: 400 });
     }
     console.error("[parseTransaction API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });

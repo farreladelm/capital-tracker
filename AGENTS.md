@@ -34,5 +34,11 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ## API & Service Layer Architecture
 - **Rule**: Keep API route handlers lean. Do not write business logic or database queries (Prisma) directly inside the route files. Instead, extract them to a dedicated service class in `lib/services/` (e.g., `budget.service.ts` or `expense.service.ts`). API route handlers must handle only HTTP protocol concerns (request/response serialization, Zod payload schema validation, and status codes).
 
+## Playwright Testing Constraint
+- **Rule**: Never run Playwright E2E tests (`npx playwright test` or similar) on your own.
+- **Action**: If changes are ready to be E2E tested, ask the user to run them for you and report the results.
+- **Rationale**: Playwright runs produce large console logs and consume substantial token counts.
+
+
 
 

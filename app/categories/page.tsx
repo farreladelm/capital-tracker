@@ -1,24 +1,16 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import { MainContainer } from "../components/MainContainer";
+import { CategoryService } from "@/lib/services/category.service";
 
 export default async function CategoriesPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const categories = await prisma.category.findMany({
-    where: { userId: session.user.id },
-    include: {
-      _count: {
-        select: { transactions: true }
-      }
-    },
-    orderBy: { createdAt: "asc" }
-  });
+  const categories = await CategoryService.getCategoriesWithCounts(session.user.id!);
 
   async function createCategory(formData: FormData) {
     "use server";
@@ -32,15 +24,17 @@ export default async function CategoriesPage() {
 
     if (!name || !type) return;
 
-    await prisma.category.create({
-      data: {
-        userId: session.user.id,
+    try {
+      await CategoryService.createCategory(session.user.id, {
         name,
-        type,
+        type: type as "INCOME" | "EXPENSE",
         icon,
         color,
-      }
-    });
+      });
+    } catch (err: unknown) {
+      console.error("Failed to create category in server action:", err);
+      return;
+    }
 
     revalidatePath("/categories");
   }
@@ -53,15 +47,12 @@ export default async function CategoriesPage() {
     const id = formData.get("id") as string;
     if (!id) return;
 
-    // Check if transactions exist
-    const count = await prisma.transaction.count({ where: { categoryId: id } });
-    if (count > 0) {
-      throw new Error("Cannot delete category with existing transactions");
+    try {
+      await CategoryService.deleteCategory(session.user.id, id);
+    } catch (err: unknown) {
+      console.error("Failed to delete category in server action:", err);
+      return;
     }
-
-    await prisma.category.delete({
-      where: { id, userId: session.user.id }
-    });
 
     revalidatePath("/categories");
     revalidatePath("/");

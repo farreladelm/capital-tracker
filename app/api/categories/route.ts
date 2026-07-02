@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { CategoryService } from "@/lib/services/category.service";
 
 const CategorySchema = z.object({
   name: z.string().min(1).max(50),
@@ -15,18 +15,9 @@ export async function GET() {
     const session = await auth();
     if (!session?.user?.id) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
-    const [categories, user] = await Promise.all([
-      prisma.category.findMany({
-        where: { userId: session.user.id },
-        orderBy: { name: "asc" },
-      }),
-      prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { currency: true },
-      })
-    ]);
+    const { categories, currency } = await CategoryService.getCategoriesWithCurrency(session.user.id);
 
-    return NextResponse.json({ categories, currency: user?.currency || "USD" });
+    return NextResponse.json({ categories, currency });
   } catch (error) {
     console.error("[categories GET API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
@@ -38,31 +29,20 @@ export async function POST(req: Request) {
     const session = await auth();
     if (!session?.user?.id) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
 
-    // Validate constraint: Max 50 categories per user
-    const count = await prisma.category.count({ where: { userId: session.user.id } });
-    if (count >= 50) return NextResponse.json({ error: "MAX_CATEGORIES_REACHED" }, { status: 400 });
-
     const body = await req.json();
     const result = CategorySchema.safeParse(body);
     
     if (!result.success) return NextResponse.json({ error: "VALIDATION_FAILED" }, { status: 400 });
 
-    // Ensure name is unique per user
-    const existing = await prisma.category.findFirst({
-      where: { userId: session.user.id, name: { equals: result.data.name } }
-    });
-
-    if (existing) return NextResponse.json({ error: "CATEGORY_EXISTS" }, { status: 400 });
-
-    const category = await prisma.category.create({
-      data: {
-        userId: session.user.id,
-        ...result.data,
-      },
-    });
-
+    const category = await CategoryService.createCategory(session.user.id, result.data);
     return NextResponse.json(category);
   } catch (error) {
+    if (error instanceof Error && error.message === "MAX_CATEGORIES_REACHED") {
+      return NextResponse.json({ error: "MAX_CATEGORIES_REACHED" }, { status: 400 });
+    }
+    if (error instanceof Error && error.message === "CATEGORY_EXISTS") {
+      return NextResponse.json({ error: "CATEGORY_EXISTS" }, { status: 400 });
+    }
     console.error("[categories POST API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
   }

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { TransactionService } from "@/lib/services/transaction.service";
 
 const PatchSchema = z.object({
   categoryId: z.string().optional(),
@@ -23,23 +23,12 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     
     if (!result.success) return NextResponse.json({ error: "VALIDATION_FAILED" }, { status: 400 });
 
-    // Validate ownership
-    const existing = await prisma.transaction.findUnique({
-      where: { id: resolvedParams.id, userId: session.user.id }
-    });
-
-    if (!existing) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
-
-    const updated = await prisma.transaction.update({
-      where: { id: resolvedParams.id },
-      data: {
-        ...result.data,
-        date: result.data.date ? new Date(result.data.date) : undefined,
-      },
-    });
-
+    const updated = await TransactionService.updateTransaction(session.user.id, resolvedParams.id, result.data);
     return NextResponse.json(updated);
   } catch (error) {
+    if (error instanceof Error && error.message === "NOT_FOUND") {
+      return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+    }
     console.error("[transaction PATCH API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
   }
@@ -52,18 +41,12 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 
     const resolvedParams = await params;
     
-    const existing = await prisma.transaction.findUnique({
-      where: { id: resolvedParams.id, userId: session.user.id }
-    });
-
-    if (!existing) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
-
-    await prisma.transaction.delete({
-      where: { id: resolvedParams.id },
-    });
-
+    await TransactionService.deleteTransaction(session.user.id, resolvedParams.id);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
+    if (error instanceof Error && error.message === "NOT_FOUND") {
+      return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+    }
     console.error("[transaction DELETE API]", error);
     return NextResponse.json({ error: "INTERNAL_SERVER_ERROR" }, { status: 500 });
   }

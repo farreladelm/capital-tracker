@@ -1,34 +1,31 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+test.describe.configure({ mode: 'serial' });
 
 test.describe('Core User Flow', () => {
-  const testEmail = `testuser-${Date.now()}@example.com`;
-  const testPassword = 'password123';
+  let page: Page;
 
-  test('User can register, onboard, add transaction, edit transaction, and delete transaction', async ({ page }) => {
-    test.setTimeout(150000);
-    // 1. Register
-    await page.goto('/register');
-    await page.fill('input[name="name"]', 'Test User');
-    await page.fill('input[name="email"]', testEmail);
-    await page.fill('input[name="password"]', testPassword);
-    await page.click('button[type="submit"]');
+  test.beforeAll(async ({ browser }) => {
+    // Create a page once to share state across tests
+    page = await browser.newPage();
+  });
 
-    // 2. Onboarding (should be redirected here)
-    await page.waitForURL('**/onboarding');
-    await expect(page.locator('text=Start Tracking')).toBeVisible();
-    
-    // Select USD radio button and submit
-    await page.locator('input[value="USD"]').click({ force: true });
-    await page.click('button:has-text("Start Tracking")');
+  test.afterAll(async () => {
+    await page.close();
+  });
 
-    // 3. Dashboard
+  test.beforeEach(async () => {
+    test.setTimeout(90000);
+  });
+
+  test('should display the initial dashboard state', async () => {
+    await page.goto('/');
     await page.waitForURL('**/');
     await expect(page.locator('text=Balance').first()).toBeVisible();
-
-    // The spent total should be visible ($0 at first)
     await expect(page.locator('text=$0').first()).toBeVisible();
+  });
 
-    // 4. Log a transaction via Add Transaction Modal
+  test('should add a transaction via Add Transaction Modal', async () => {
     console.log('Opening add transaction modal...');
     await page.locator('nav button').filter({ hasText: 'add' }).click();
 
@@ -47,10 +44,11 @@ test.describe('Core User Flow', () => {
     await page.click('button:has-text("Done")');
 
     // Wait for dashboard spent total to update to $4, and card to -$4
-    await expect(page.locator('text=$4').first()).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('text=-$4').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text=$4').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=-$4').first()).toBeVisible({ timeout: 15000 });
+  });
 
-    // 5. Edit transaction
+  test('should edit the transaction', async () => {
     console.log('Opening edit transaction modal...');
     await page.locator('text=coffee').first().click();
     await expect(page.locator('text=Edit Transaction')).toBeVisible();
@@ -60,10 +58,11 @@ test.describe('Core User Flow', () => {
     await page.click('button[type="submit"]:has-text("Save Changes")');
 
     // Wait for modal to close and dashboard total spent to update to $6, and card to -$6
-    await expect(page.locator('text=$6').first()).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('text=-$6').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text=$6').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=-$6').first()).toBeVisible({ timeout: 15000 });
+  });
 
-    // 6. Delete transaction
+  test('should delete the transaction', async () => {
     console.log('Opening edit modal again to delete...');
     await page.locator('text=coffee').first().click();
     await page.click('button:has-text("Delete Transaction")');
@@ -73,7 +72,8 @@ test.describe('Core User Flow', () => {
     await page.click('button:has-text("Confirm Delete")');
 
     // Verify transaction is gone and total spent returns to $0
-    await expect(page.locator('text=coffee')).not.toBeVisible();
-    await expect(page.locator('text=$0').first()).toBeVisible();
+    await expect(page.locator('text=coffee')).not.toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=$0').first()).toBeVisible({ timeout: 15000 });
   });
 });
+

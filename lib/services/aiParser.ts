@@ -25,6 +25,20 @@ export class AIParserError extends Error {
 }
 
 export async function parseTransactionInput(input: string, currentUtcTime: string, categoryNames: string[] = []): Promise<ParsedTransaction[]> {
+  // E2E Mock Path to avoid external Gemini API dependencies during tests
+  if (process.env.MOCK_AI === "true") {
+    const isCoffee = input.toLowerCase().includes("coffee");
+    return [
+      {
+        amount: isCoffee ? 4 : 10,
+        category: isCoffee ? "Food" : (categoryNames[0] || "Uncategorized"),
+        type: "EXPENSE",
+        date: currentUtcTime,
+        description: isCoffee ? "coffee" : input,
+      },
+    ];
+  }
+
   const categoryListStr = categoryNames.length > 0 ? categoryNames.join(", ") : "None provided";
   
   const prompt = `
@@ -92,6 +106,7 @@ export async function parseTransactionInput(input: string, currentUtcTime: strin
     return validTransactions;
   } catch (error) {
     if (error instanceof AIParserError) throw error;
+    console.error("[AI Parser Error]:", error);
     throw new AIParserError("Failed to parse transaction via AI provider.", "AI_PROVIDER_FAILURE");
   }
 }

@@ -1,8 +1,8 @@
 "use server";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { TransactionService } from "@/lib/services/transaction.service";
 
 export async function updateTransaction(formData: FormData) {
   const session = await auth();
@@ -18,19 +18,17 @@ export async function updateTransaction(formData: FormData) {
 
   const amountMinor = Math.round(parseFloat(amountStr) * 100);
 
-  const category = await prisma.category.findUnique({ where: { id: categoryId } });
-  if (!category) return;
-
-  await prisma.transaction.update({
-    where: { id, userId: session.user.id },
-    data: {
+  try {
+    await TransactionService.updateTransaction(session.user.id, id, {
       description,
       amountMinor,
       categoryId,
-      type: category.type,
-      date: new Date(dateStr)
-    }
-  });
+      date: dateStr,
+    });
+  } catch (err) {
+    console.error("Failed to update transaction in server action:", err);
+    return;
+  }
 
   revalidatePath("/");
   revalidatePath("/history");
@@ -43,9 +41,12 @@ export async function deleteTransaction(formData: FormData) {
   const id = formData.get("id") as string;
   if (!id) return;
 
-  await prisma.transaction.delete({
-    where: { id, userId: session.user.id }
-  });
+  try {
+    await TransactionService.deleteTransaction(session.user.id, id);
+  } catch (err) {
+    console.error("Failed to delete transaction in server action:", err);
+    return;
+  }
 
   revalidatePath("/");
   revalidatePath("/history");
@@ -64,21 +65,20 @@ export async function createTransaction(formData: FormData) {
 
   const amountMinor = Math.round(parseFloat(amountStr) * 100);
 
-  const category = await prisma.category.findUnique({ where: { id: categoryId } });
-  if (!category) return { error: "Category not found" };
-
-  await prisma.transaction.create({
-    data: {
-      userId: session.user.id,
-      description,
-      amountMinor,
+  try {
+    await TransactionService.createTransaction(session.user.id, {
       categoryId,
-      type: category.type,
-      date: new Date(dateStr)
-    }
-  });
+      amountMinor,
+      description,
+      date: new Date(dateStr),
+    });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to create transaction";
+    return { error: message };
+  }
 
   revalidatePath("/");
   revalidatePath("/history");
   return { success: true };
 }
+

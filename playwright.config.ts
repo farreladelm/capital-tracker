@@ -14,9 +14,18 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
+    // Setup project to authenticate once
+    {
+      name: 'setup',
+      testMatch: /global\.setup\.ts/,
+    },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
     },
   ],
   webServer: {
@@ -24,5 +33,8 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    env: {
+      MOCK_AI: 'true',
+    },
   },
 });
