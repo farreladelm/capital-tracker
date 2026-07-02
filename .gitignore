@@ -41,6 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+/generated/prisma
 
 # Playwright
 node_modules/
@@ -49,3 +50,11 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Scripts
+/scripts
+
+# Agent Settings
+/.gemini
+/.gemini_security
+/.impeccable
