@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { format, isToday, isYesterday } from "date-fns";
 import { formatCurrency } from "@/lib/format";
 
@@ -30,17 +31,20 @@ export function TransactionCard({
 }) {
   const isIncome = txn.type === "INCOME";
   
-  let dateText = "";
-  if (showDate) {
-    const d = new Date(txn.date);
-    if (isToday(d)) {
-      dateText = "Today";
-    } else if (isYesterday(d)) {
-      dateText = "Yesterday";
-    } else {
-      dateText = format(d, "dd MMM");
+  const [dateText, setDateText] = useState("");
+
+  useEffect(() => {
+    if (showDate) {
+      const d = new Date(txn.date);
+      if (isToday(d)) {
+        setDateText("Today");
+      } else if (isYesterday(d)) {
+        setDateText("Yesterday");
+      } else {
+        setDateText(format(d, "dd MMM"));
+      }
     }
-  }
+  }, [txn.date, showDate]);
 
   return (
     <div 
@@ -55,7 +59,7 @@ export function TransactionCard({
         <div className="flex flex-col min-w-0 flex-1">
           <span className="text-sm font-semibold text-on-background truncate">{txn.description}</span>
           <span className="font-label-sm text-secondary truncate">
-            {txn.category.name} {showDate && `• ${dateText}`}
+            {txn.category.name} {showDate && dateText && `• ${dateText}`}
           </span>
         </div>
       </div>
