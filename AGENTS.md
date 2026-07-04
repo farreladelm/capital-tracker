@@ -4,6 +4,10 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
+## Planning & Execution Workflow
+- **Rule**: Always create a comprehensive plan before starting any code implementation.
+- **Rule**: Always track your implementation process using a task artifact (e.g., `plan.md` or `task_progress.md`). Update this artifact as you complete steps to maintain a clear record of progress.
+
 ## Shell Command Execution
 - **Rule**: Always prefix any shell/terminal command with `rtk`.
 - **Example**: `rtk git push ...`, `rtk git status`, `rtk npm run dev`.
@@ -39,6 +43,6 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Action**: If changes are ready to be E2E tested, ask the user to run them for you and report the results.
 - **Rationale**: Playwright runs produce large console logs and consume substantial token counts.
 
-## Git Commit Restrictions
-- **Rule**: Never run `git commit` automatically.
-- **Details**: Do not perform automatic git commits. After completing an implementation, bug fix, or execution, ask the user if they would like to commit the changes. Only proceed with the commit if the user explicitly instructs you to do so.
+## Git Commit & Push Restrictions
+- **Rule**: Never run `git commit` or `git push` automatically.
+- **Details**: Do not perform automatic git commits or pushes. After completing an implementation, bug fix, or execution, ask the user if they would like to commit and/or push the changes. Only proceed with the commit or push if the user explicitly approves it.
