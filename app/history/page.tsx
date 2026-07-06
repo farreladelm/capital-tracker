@@ -25,18 +25,10 @@ export default async function HistoryPage() {
   return (
     <div className="flex min-h-screen flex-col text-on-surface pb-32">
       {/* Top AppBar */}
-      <header
-        className="fixed top-0 w-full z-[100] h-16 flex justify-center items-center px-margin-mobile md:px-margin-desktop"
-        style={{
-          backgroundColor: "rgba(252, 248, 255, 0.80)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          borderBottom: "1px solid var(--color-outline-variant)",
-        }}
-      >
-        <span className="font-headline-md text-base font-semibold text-on-surface tracking-tight">
+      <header className="bg-background/80 dark:bg-background/80 backdrop-blur-xl fixed top-0 w-full flex justify-center items-center h-16 z-50 px-margin-mobile md:px-margin-desktop">
+        <h1 className="font-headline-md font-bold text-primary dark:text-primary-fixed">
           History
-        </span>
+        </h1>
       </header>
 
       {/* Main Content Container */}

@@ -148,7 +148,7 @@ export function HistoryClient({
       >
         {/* Search input */}
         <div
-          className="search-input-wrapper flex items-center w-full rounded-2xl bg-surface-container-lowest transition-all duration-200 soft-card-shadow"
+          className="flex items-center w-full rounded-2xl bg-surface-container-lowest dark:bg-surface-container-high transition-all duration-200 shadow-[0_4px_20px_rgba(89,90,115,0.04)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.15)] focus-within:ring-2 focus-within:ring-primary/15 dark:focus-within:ring-primary-fixed/20 focus-within:shadow-[0_4px_20px_rgba(76,75,198,0.08)] dark:focus-within:shadow-[0_4px_20px_rgba(0,0,0,0.25)]"
         >
           <span className="pl-4 pr-2 text-on-surface-variant shrink-0">
             <Search size={17} strokeWidth={2} />
@@ -188,15 +188,10 @@ export function HistoryClient({
                   transition-all duration-200 active-press
                   ${
                     isActive
-                      ? "bg-primary text-on-primary soft-card-shadow"
-                      : "bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"
+                      ? "bg-primary text-on-primary shadow-sm"
+                      : "bg-surface-container hover:bg-surface-container-high text-secondary"
                   }
                 `}
-                style={
-                  isActive
-                    ? {}
-                    : { border: "1.5px solid var(--color-outline-variant)" }
-                }
               >
                 {tab.label}
               </button>
@@ -219,14 +214,10 @@ export function HistoryClient({
             ([date, txns]) => (
               <div key={date}>
                 {/* Date label */}
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="font-label-md text-xs font-semibold text-on-surface-variant shrink-0">
+                <div className="pt-4 pb-1 mb-2">
+                  <span className="font-label-sm text-[11px] uppercase tracking-wider font-bold text-on-surface-variant/75">
                     {date}
                   </span>
-                  <div
-                    className="flex-1 h-px"
-                    style={{ background: "var(--color-outline-variant)" }}
-                  />
                 </div>
 
                 <TransactionList
@@ -281,8 +272,7 @@ function EmptyState({
       {hasFilters && (
         <button
           onClick={onClear}
-          className="mt-1 py-2 px-5 rounded-full bg-surface-container-lowest font-label-sm text-xs text-primary active-press transition-colors hover:bg-primary-fixed"
-          style={{ border: "1.5px solid var(--color-primary)" }}
+          className="mt-1 py-2.5 px-6 rounded-full bg-primary/10 font-label-sm text-xs text-primary active-press transition-colors hover:bg-primary/20"
         >
           Clear filters
         </button>

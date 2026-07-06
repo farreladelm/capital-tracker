@@ -124,14 +124,7 @@ body {
   scrollbar-width: none;
 }
 
-.search-input-wrapper {
-  border: 1.5px solid var(--color-outline-variant);
-  transition: border-color 0.15s ease;
-}
 
-.search-input-wrapper:focus-within {
-  border-color: var(--color-primary);
-}
 
 @media (prefers-reduced-motion: reduce) {
   .active-press:active {
