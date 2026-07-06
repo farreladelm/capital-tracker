@@ -12,7 +12,6 @@ A serene, Apple Health-inspired personal finance tracker designed to make loggin
 * **Dynamic Multi-Currency & Locale Support:** Supports multiple currencies with automated locale-aware formatting, including compact formatting for high-value currencies (such as Indonesian Rupiah - IDR) to prevent screen layout breaking.
 * **3-State Budget Tracking:** Category budgets automatically monitor monthly caps and provide visual warnings (under 70%, 70-100%, and over-budget) with custom warning/error indicator systems.
 * **Secure Authentication:** Built on **Auth.js (NextAuth.js v5)**, supporting both Google OAuth and email/password credentials secured with bcrypt hashing.
-* **Dynamic Host Detection:** Configured for local and reverse-proxy deployment (e.g. ngrok tunnels), dynamically resolving callback URLs based on headers for seamless testing.
 
 ---
 
