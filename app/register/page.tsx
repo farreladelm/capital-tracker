@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { signIn } from "@/auth";
 import RegisterForm from "@/app/components/RegisterForm";
+import { loginWithGoogle } from "@/app/actions/auth";
 
 export const metadata = {
   title: "Create Account — Capital Tracker",
@@ -70,12 +70,7 @@ export default function RegisterPage() {
             <div className="flex-1 border-t border-outline-variant" />
           </div>
 
-          <form
-            action={async () => {
-              "use server";
-              await signIn("google", { redirectTo: "/" });
-            }}
-          >
+          <form action={loginWithGoogle}>
             <button
               id="register-google"
               type="submit"

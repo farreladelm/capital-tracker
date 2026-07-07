@@ -52,3 +52,7 @@ export async function register(formData: FormData) {
 
   return login(formData);
 }
+
+export async function loginWithGoogle() {
+  await signIn("google", { redirectTo: "/" });
+}

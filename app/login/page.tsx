@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { signIn } from "@/auth";
 import LoginForm from "@/app/components/LoginForm";
+import { loginWithGoogle } from "@/app/actions/auth";
 
 export const metadata = {
   title: "Sign In — Capital Tracker",
@@ -70,12 +70,7 @@ export default function LoginPage() {
             <div className="flex-1 border-t border-outline-variant" />
           </div>
 
-          <form
-            action={async () => {
-              "use server";
-              await signIn("google", { redirectTo: "/" });
-            }}
-          >
+          <form action={loginWithGoogle}>
             <button
               id="login-google"
               type="submit"
