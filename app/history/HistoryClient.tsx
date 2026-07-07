@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Search, X, Loader2, SearchX } from "lucide-react";
 import { TransactionList } from "@/app/components/TransactionList";
+import { HistorySkeleton } from "@/app/components/TransactionListSkeleton";
 
 type Category = {
   id: string;
@@ -202,10 +203,7 @@ export function HistoryClient({
 
       {/* ─── Transaction List ─────────────────────────────────────────── */}
       {initialLoading ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-3 text-on-surface-variant">
-          <Loader2 className="animate-spin text-primary" size={28} />
-          <span className="font-label-md text-sm">Loading history…</span>
-        </div>
+        <HistorySkeleton />
       ) : transactions.length === 0 ? (
         <EmptyState hasFilters={hasFiltersActive} onClear={() => { setSearch(""); setType("ALL"); }} />
       ) : (

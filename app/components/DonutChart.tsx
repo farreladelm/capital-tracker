@@ -50,6 +50,7 @@ export function DonutChart({ data, currencyCode = "USD", locale = "en-US" }: Don
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
+              // @ts-expect-error recharts Pie type definition missing activeIndex
               activeIndex={activeIndex}
               data={data}
               cx="50%"
