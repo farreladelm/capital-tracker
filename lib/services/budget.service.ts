@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { TrendsService } from "./trends.service";
 
 export class BudgetService {
   /**
@@ -49,11 +50,12 @@ export class BudgetService {
           where: { categoryId },
         });
       }
+      TrendsService.clearCache(userId);
       return null;
     }
 
     // Otherwise, create or update the budget
-    return prisma.budget.upsert({
+    const budget = await prisma.budget.upsert({
       where: { categoryId },
       update: {
         amountMinor,
@@ -73,5 +75,8 @@ export class BudgetService {
         },
       },
     });
+
+    TrendsService.clearCache(userId);
+    return budget;
   }
 }

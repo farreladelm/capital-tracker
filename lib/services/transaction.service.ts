@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { parseTransactionInput } from "./aiParser";
+import { TrendsService } from "./trends.service";
 import type { CategoryModel as Category } from "@/generated/prisma/models";
 
 export interface GetTransactionsParams {
@@ -88,7 +89,7 @@ export class TransactionService {
       throw new Error("TYPE_MISMATCH");
     }
 
-    return prisma.transaction.create({
+    const transaction = await prisma.transaction.create({
       data: {
         userId,
         categoryId: data.categoryId,
@@ -98,6 +99,10 @@ export class TransactionService {
         date: new Date(data.date),
       },
     });
+
+    TrendsService.clearCache(userId);
+
+    return transaction;
   }
 
   /**
@@ -113,13 +118,17 @@ export class TransactionService {
       throw new Error("NOT_FOUND");
     }
 
-    return prisma.transaction.update({
+    const updated = await prisma.transaction.update({
       where: { id },
       data: {
         ...data,
         date: data.date ? new Date(data.date) : undefined,
       },
     });
+
+    TrendsService.clearCache(userId);
+
+    return updated;
   }
 
   /**
@@ -138,6 +147,8 @@ export class TransactionService {
     await prisma.transaction.delete({
       where: { id },
     });
+
+    TrendsService.clearCache(userId);
   }
 
   /**
@@ -182,6 +193,8 @@ export class TransactionService {
         });
       })
     );
+
+    TrendsService.clearCache(userId);
 
     return savedTransactions;
   }

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { TrendsService } from "./trends.service";
 
 export interface CreateCategoryInput {
   name: string;
@@ -91,10 +92,13 @@ export class CategoryService {
       throw new Error("NOT_FOUND");
     }
 
-    return prisma.category.update({
+    const updated = await prisma.category.update({
       where: { id },
       data,
     });
+
+    TrendsService.clearCache(userId);
+    return updated;
   }
 
   /**
@@ -122,5 +126,7 @@ export class CategoryService {
     await prisma.category.delete({
       where: { id },
     });
+
+    TrendsService.clearCache(userId);
   }
 }
