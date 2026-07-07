@@ -51,6 +51,7 @@ export async function parseTransactionInput(input: string, currentUtcTime: strin
     - If the amount is missing, return 0 for the amount.
     - Do NOT invent dates or amounts. Use the current UTC time for "today".
     - Try to map the transaction to one of the Available Categories exactly. If none match, use 'Uncategorized' or the closest match.
+    - The description must be ONLY the name of the merchant, item, or activity (e.g., "Gojek" for "gojek 36k", or "coffee" for "coffee 4"). Do NOT include the parsed amount or currency representation (like "36k", "4", "$15") in the description.
     
     Input: "${input}"
   `;
@@ -73,7 +74,10 @@ export async function parseTransactionInput(input: string, currentUtcTime: strin
                   category: { type: "STRING" },
                   type: { type: "STRING", enum: ["EXPENSE", "INCOME"] },
                   date: { type: "STRING" },
-                  description: { type: "STRING" }
+                  description: { 
+                    type: "STRING",
+                    description: "Concise item/merchant name, excluding amounts or currency strings (e.g., 'Gojek' for 'gojek 36k')"
+                  }
                 },
                 required: ["amount", "category", "type", "date", "description"]
               }
