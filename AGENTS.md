@@ -9,8 +9,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Rule**: Always track your implementation process using a task artifact (e.g., `plan.md` or `task_progress.md`). Update this artifact as you complete steps to maintain a clear record of progress.
 
 ## Shell Command Execution
-- **Rule**: Always prefix any shell/terminal command with `rtk`.
-- **Example**: `rtk git push ...`, `rtk git status`, `rtk npm run dev`.
+- **Rule**: Always prefix any shell/terminal command with `rtk`, except when starting the development server (e.g., `npm run dev` or `next dev`).
+- **Example**: `rtk git push ...`, `rtk git status`, `npm run dev`.
 - **Rationale**: `rtk` is used to save tokens. It trims down unnecessary shell command output before it is sent to the agent.
 
 ## Testing & Quality
