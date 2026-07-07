@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { X, Trash2, Loader2, ChevronDown } from "lucide-react";
+import { X, Trash2, Loader2 } from "lucide-react";
 import { updateTransaction, deleteTransaction } from "../actions/transaction";
+import { Select } from "./Select";
 
 type Transaction = {
   id: string;
@@ -97,6 +98,25 @@ export function EditTransactionModal({ isOpen, onClose, txn, categories, currenc
   const expenseCategories = categories.filter((c) => c.type === "EXPENSE");
   const incomeCategories = categories.filter((c) => c.type === "INCOME");
 
+  const selectGroups = [
+    {
+      label: "Expenses",
+      options: expenseCategories.map((c) => ({
+        value: c.id,
+        label: c.name,
+        icon: c.icon,
+      })),
+    },
+    {
+      label: "Income",
+      options: incomeCategories.map((c) => ({
+        value: c.id,
+        label: c.name,
+        icon: c.icon,
+      })),
+    },
+  ];
+
   return createPortal(
     <div 
       className="fixed inset-0 z-[200] bg-background/50 backdrop-blur-xl flex items-center justify-center p-4 animate-in fade-in duration-200"
@@ -169,36 +189,12 @@ export function EditTransactionModal({ isOpen, onClose, txn, categories, currenc
             <label className="font-label text-[11px] font-bold text-secondary uppercase tracking-wider pl-1">
               Category
             </label>
-            <div className="relative flex items-center">
-              <select
-                name="categoryId"
-                defaultValue={txn.categoryId}
-                required
-                className="w-full rounded-2xl bg-surface-container-low p-3 font-body text-sm text-on-surface focus:bg-surface-container-high focus:outline-none transition-colors border-none appearance-none cursor-pointer pr-10"
-              >
-                {expenseCategories.length > 0 && (
-                  <optgroup label="Expenses" className="bg-surface text-on-surface font-semibold text-xs">
-                    {expenseCategories.map((c) => (
-                      <option key={c.id} value={c.id} className="font-normal text-sm">
-                        {c.icon} {c.name}
-                      </option>
-                    ))}
-                  </optgroup>
-                )}
-                {incomeCategories.length > 0 && (
-                  <optgroup label="Income" className="bg-surface text-on-surface font-semibold text-xs">
-                    {incomeCategories.map((c) => (
-                      <option key={c.id} value={c.id} className="font-normal text-sm">
-                        {c.icon} {c.name}
-                      </option>
-                    ))}
-                  </optgroup>
-                )}
-              </select>
-              <span className="absolute right-4 pointer-events-none text-on-surface-variant">
-                <ChevronDown size={18} />
-              </span>
-            </div>
+            <Select
+              name="categoryId"
+              defaultValue={txn.categoryId}
+              groups={selectGroups}
+              required
+            />
           </div>
 
           {/* Date */}
