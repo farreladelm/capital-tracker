@@ -34,7 +34,7 @@ export function BottomNav() {
 
       {/* Profile */}
       <Link href="/account" className={`flex flex-col items-center justify-center ${pathname === "/account" ? "text-primary dark:text-primary-fixed" : "text-secondary dark:text-secondary-fixed-dim"} hover:bg-primary/5 transition-colors active:scale-90 transition-transform duration-200 w-16 rounded-lg py-1`}>
-        <span className="material-symbols-outlined mb-1" style={{ fontVariationSettings: `"FILL" ${pathname === "/account" ? 1 : 0}` }}>settings</span>
+        <span className="material-symbols-outlined mb-1" style={{ fontVariationSettings: `"FILL" ${pathname === "/account" ? 1 : 0}` }}>person</span>
         <span className="font-label-sm">Profile</span>
       </Link>
     </nav>

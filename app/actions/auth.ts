@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
@@ -55,4 +55,8 @@ export async function register(formData: FormData) {
 
 export async function loginWithGoogle() {
   await signIn("google", { redirectTo: "/" });
+}
+
+export async function logout() {
+  await signOut({ redirectTo: "/login" });
 }
