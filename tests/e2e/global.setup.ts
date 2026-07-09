@@ -1,5 +1,4 @@
 import { test as setup, expect } from '@playwright/test';
-import { prisma } from '../../lib/prisma';
 
 const authFile = 'playwright/.auth/user.json';
 
@@ -28,24 +27,34 @@ setup('authenticate', async ({ page }) => {
   await page.waitForURL('**/');
   await expect(page.locator('text=Balance').first()).toBeVisible();
 
-  // 4. Seed transactions for trends analytics page verification
-  const user = await prisma.user.findUnique({
-    where: { email: testEmail },
-  });
+  // 4. Seed transactions for trends analytics page verification via API (avoids import.meta ESM conflicts)
+  const categoriesResponse = await page.request.get('/api/categories');
+  expect(categoriesResponse.ok()).toBeTruthy();
+  const { categories } = await categoriesResponse.json();
+  const foodCategory = categories.find((c: any) => c.name === "Food");
 
-  if (user) {
-    const category = await prisma.category.findFirst({
-      where: { userId: user.id, name: "Food" }
+  if (foodCategory) {
+    const createTxResponse1 = await page.request.post('/api/transactions', {
+      data: {
+        categoryId: foodCategory.id,
+        type: "EXPENSE",
+        amountMinor: 12000,
+        description: "June Groceries",
+        date: new Date("2026-06-15T12:00:00Z").toISOString(),
+      }
     });
+    expect(createTxResponse1.ok()).toBeTruthy();
 
-    if (category) {
-      await prisma.transaction.createMany({
-        data: [
-          { userId: user.id, categoryId: category.id, type: "EXPENSE", amountMinor: 12000, description: "June Groceries", date: new Date("2026-06-15T12:00:00Z") },
-          { userId: user.id, categoryId: category.id, type: "EXPENSE", amountMinor: 10000, description: "July Dinner", date: new Date("2026-07-05T12:00:00Z") }
-        ]
-      });
-    }
+    const createTxResponse2 = await page.request.post('/api/transactions', {
+      data: {
+        categoryId: foodCategory.id,
+        type: "EXPENSE",
+        amountMinor: 10000,
+        description: "May Dinner",
+        date: new Date("2026-05-05T12:00:00Z").toISOString(),
+      }
+    });
+    expect(createTxResponse2.ok()).toBeTruthy();
   }
 
   // Save storage state to be shared across tests

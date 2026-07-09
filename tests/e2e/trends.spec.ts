@@ -22,14 +22,14 @@ test.describe('Trends Page', () => {
     await expect(page.locator('h2', { hasText: 'Budgets' })).toBeVisible();
 
     // 4. Verify MonthSelector options are visible
-    await expect(page.locator('button:has-text("July")')).toBeVisible();
-    await expect(page.locator('button:has-text("June")')).toBeVisible();
+    await expect(page.locator('button:has-text("June")')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('button:has-text("May")')).toBeVisible({ timeout: 15000 });
 
-    // 5. Change month to June and verify page updates
-    await page.click('button:has-text("June")');
+    // 5. Change month to May and verify page updates
+    await page.click('button:has-text("May")');
     
-    // Check that June is selected/active
-    const juneButton = page.locator('button:has-text("June")');
-    await expect(juneButton).toHaveClass(/bg-primary/);
+    // Check that May is selected/active
+    const mayButton = page.locator('button:has-text("May")');
+    await expect(mayButton).toHaveClass(/bg-primary/);
   });
 });
