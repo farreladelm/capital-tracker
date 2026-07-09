@@ -36,16 +36,14 @@ export class TransactionService {
     const whereClause: {
       userId: string;
       type?: "INCOME" | "EXPENSE";
-      description?: { contains: string };
+      description?: { contains: string; mode?: "default" | "insensitive" };
     } = { userId };
 
     if (type && (type === "INCOME" || type === "EXPENSE")) {
       whereClause.type = type;
     }
     if (search) {
-      // SQLite LIKE is case-insensitive for ASCII characters by default;
-      // the `mode` option is PostgreSQL-only and not applicable here.
-      whereClause.description = { contains: search };
+      whereClause.description = { contains: search, mode: "insensitive" };
     }
 
     const transactions = await prisma.transaction.findMany({

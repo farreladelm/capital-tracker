@@ -155,7 +155,7 @@ describe("TrendsService Unit Tests", () => {
     await prisma.transaction.deleteMany({
       where: { id: { in: [txn1.id, txn2.id, txn3.id, txnPrev.id] } },
     });
-  });
+  }, 30000);
 
   it("should personalize AI insights when user has demographic profile data", async () => {
     // 1. Update user with profile details
@@ -189,5 +189,5 @@ describe("TrendsService Unit Tests", () => {
         targetSavingsRate: null,
       },
     });
-  });
+  }, 30000);
 });

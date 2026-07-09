@@ -232,7 +232,7 @@ export class TrendsService {
     if (isCacheValid && cached) {
       aiInsight = cached.insight;
     } else {
-      if (process.env.GEMINI_API_KEY) {
+      if (process.env.GEMINI_API_KEY && process.env.MOCK_AI !== "true") {
         try {
           const userAge = user.birthDate ? calculateAge(user.birthDate) : "Not specified";
           const userGoal = user.financialGoal ? mapGoalText(user.financialGoal) : "General expense tracking";

@@ -487,6 +487,7 @@ export type BudgetCreateOrConnectWithoutUserInput = {
 
 export type BudgetCreateManyUserInputEnvelope = {
   data: Prisma.BudgetCreateManyUserInput | Prisma.BudgetCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type BudgetUpsertWithWhereUniqueWithoutUserInput = {
@@ -1333,6 +1334,7 @@ export type BudgetCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many Budgets.
    */
   data: Prisma.BudgetCreateManyInput | Prisma.BudgetCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1351,6 +1353,7 @@ export type BudgetCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many Budgets.
    */
   data: Prisma.BudgetCreateManyInput | Prisma.BudgetCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
