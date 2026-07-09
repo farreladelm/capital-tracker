@@ -11,3 +11,9 @@ services:
       - NODE_OPTIONS=--dns-result-order=ipv4first
     env_file:
       - .env
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
