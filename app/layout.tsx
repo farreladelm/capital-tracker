@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   description: "Track your capital",
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,6 +32,10 @@ export default function RootLayout({
         <div className="relative z-10 flex-1 flex flex-col">
           {children}
         </div>
+        <Toaster
+          position="top-center"
+          className="rounded-xl"
+        />
       </body>
     </html>
   );

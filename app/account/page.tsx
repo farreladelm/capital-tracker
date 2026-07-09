@@ -21,14 +21,7 @@ export default async function AccountPage() {
 
   return (
     <div className="flex min-h-screen flex-col text-on-surface pb-32">
-      {/* Top AppBar */}
-      <header className="bg-background/80 dark:bg-background/80 backdrop-blur-xl fixed top-0 w-full flex justify-center items-center h-16 z-50 px-margin-mobile md:px-margin-desktop">
-        <h1 className="font-headline-md font-bold text-primary dark:text-primary-fixed">
-          Profile
-        </h1>
-      </header>
-
-      <MainContainer className="pt-16 max-w-xl mx-auto">
+      <MainContainer className="pt-12 md:pt-20 max-w-xl mx-auto">
         <AccountClient user={{ name: user.name || "", email: user.email, currency: user.currency || "USD" }} />
       </MainContainer>
 
