@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+build
+.git
+.gitignore
+*.db
+*.db-journal
+Dockerfile
+docker-compose.yml
+README.md
+tests
+playwright-report
+test-results
