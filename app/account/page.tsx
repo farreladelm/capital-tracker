@@ -22,7 +22,15 @@ export default async function AccountPage() {
   return (
     <div className="flex min-h-screen flex-col text-on-surface pb-32">
       <MainContainer className="pt-12 md:pt-20 max-w-xl mx-auto">
-        <AccountClient user={{ name: user.name || "", email: user.email, currency: user.currency || "USD" }} />
+        <AccountClient user={{
+          name: user.name || "",
+          email: user.email,
+          currency: user.currency || "USD",
+          gender: user.gender,
+          birthDate: user.birthDate ? user.birthDate.toISOString().split("T")[0] : null,
+          financialGoal: user.financialGoal,
+          targetSavingsRate: user.targetSavingsRate,
+        }} />
       </MainContainer>
 
       <BottomNav />

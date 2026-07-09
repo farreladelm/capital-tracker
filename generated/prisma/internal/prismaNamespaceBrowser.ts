@@ -118,6 +118,10 @@ export const UserScalarFieldEnum = {
   name: 'name',
   image: 'image',
   currency: 'currency',
+  gender: 'gender',
+  birthDate: 'birthDate',
+  financialGoal: 'financialGoal',
+  targetSavingsRate: 'targetSavingsRate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -234,8 +234,20 @@ export class TrendsService {
     } else {
       if (process.env.GEMINI_API_KEY) {
         try {
+          const userAge = user.birthDate ? calculateAge(user.birthDate) : "Not specified";
+          const userGoal = user.financialGoal ? mapGoalText(user.financialGoal) : "General expense tracking";
+          const targetSavings = user.targetSavingsRate ? `${user.targetSavingsRate}%` : "Not specified";
+          const userGender = user.gender ? user.gender.toLowerCase() : "Not specified";
+
           const prompt = `
             You are a personal financial advisor. Write a very brief (2-3 sentences), serene, encouraging, and precise summary of the user's spending trends and budgets for this month.
+            
+            User Context:
+            - Age: ${userAge}
+            - Gender: ${userGender}
+            - Primary Financial Goal: ${userGoal}
+            - Target Savings Rate: ${targetSavings}
+
             Total Spent This Month: ${thisPeriod.toFixed(2)} ${currency}
             Total Spent Last Month: ${prevPeriod.toFixed(2)} ${currency}
             Percentage Change: ${percentChange}%
@@ -243,6 +255,7 @@ export class TrendsService {
             Budgets Status: ${budgetsDetails || "No budgets set"}
             
             Guidelines:
+            - Write advice tailored specifically to the user's goal, target savings rate, and age where helpful.
             - Keep it plain text under 300 characters.
             - Do NOT use markdown format (like bolding, lists, asterisk, or headers).
             - Be serene, encouraging, and precise.
@@ -302,5 +315,30 @@ export class TrendsService {
       aiInsight,
       activeMonthsByYear,
     };
+  }
+}
+
+function calculateAge(birthDate: Date): number {
+  const today = new Date();
+  let age = today.getUTCFullYear() - birthDate.getUTCFullYear();
+  const m = today.getUTCMonth() - birthDate.getUTCMonth();
+  if (m < 0 || (m === 0 && today.getUTCDate() < birthDate.getUTCDate())) {
+    age--;
+  }
+  return age;
+}
+
+function mapGoalText(goal: string): string {
+  switch (goal) {
+    case "TRACKING":
+      return "Simple Expense Tracking";
+    case "DEBT_PAYOFF":
+      return "Debt Payoff";
+    case "EMERGENCY_FUND":
+      return "Building Emergency Fund";
+    case "BIG_PURCHASE":
+      return "Saving for Big Purchase";
+    default:
+      return "General Expense Tracking";
   }
 }

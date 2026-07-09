@@ -20,8 +20,18 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  targetSavingsRate: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  targetSavingsRate: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -32,6 +42,10 @@ export type UserMinAggregateOutputType = {
   name: string | null
   image: string | null
   currency: string | null
+  gender: string | null
+  birthDate: Date | null
+  financialGoal: string | null
+  targetSavingsRate: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +58,10 @@ export type UserMaxAggregateOutputType = {
   name: string | null
   image: string | null
   currency: string | null
+  gender: string | null
+  birthDate: Date | null
+  financialGoal: string | null
+  targetSavingsRate: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,11 +74,23 @@ export type UserCountAggregateOutputType = {
   name: number
   image: number
   currency: number
+  gender: number
+  birthDate: number
+  financialGoal: number
+  targetSavingsRate: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type UserAvgAggregateInputType = {
+  targetSavingsRate?: true
+}
+
+export type UserSumAggregateInputType = {
+  targetSavingsRate?: true
+}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -70,6 +100,10 @@ export type UserMinAggregateInputType = {
   name?: true
   image?: true
   currency?: true
+  gender?: true
+  birthDate?: true
+  financialGoal?: true
+  targetSavingsRate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +116,10 @@ export type UserMaxAggregateInputType = {
   name?: true
   image?: true
   currency?: true
+  gender?: true
+  birthDate?: true
+  financialGoal?: true
+  targetSavingsRate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +132,10 @@ export type UserCountAggregateInputType = {
   name?: true
   image?: true
   currency?: true
+  gender?: true
+  birthDate?: true
+  financialGoal?: true
+  targetSavingsRate?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -137,6 +179,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -167,6 +221,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -179,9 +235,15 @@ export type UserGroupByOutputType = {
   name: string | null
   image: string | null
   currency: string | null
+  gender: string | null
+  birthDate: Date | null
+  financialGoal: string | null
+  targetSavingsRate: number | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -212,6 +274,10 @@ export type UserWhereInput = {
   name?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
   currency?: Prisma.StringNullableFilter<"User"> | string | null
+  gender?: Prisma.StringNullableFilter<"User"> | string | null
+  birthDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  financialGoal?: Prisma.StringNullableFilter<"User"> | string | null
+  targetSavingsRate?: Prisma.IntNullableFilter<"User"> | number | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -229,6 +295,10 @@ export type UserOrderByWithRelationInput = {
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  financialGoal?: Prisma.SortOrderInput | Prisma.SortOrder
+  targetSavingsRate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
@@ -249,6 +319,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
   currency?: Prisma.StringNullableFilter<"User"> | string | null
+  gender?: Prisma.StringNullableFilter<"User"> | string | null
+  birthDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  financialGoal?: Prisma.StringNullableFilter<"User"> | string | null
+  targetSavingsRate?: Prisma.IntNullableFilter<"User"> | number | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -266,11 +340,17 @@ export type UserOrderByWithAggregationInput = {
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  financialGoal?: Prisma.SortOrderInput | Prisma.SortOrder
+  targetSavingsRate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -284,6 +364,10 @@ export type UserScalarWhereWithAggregatesInput = {
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   currency?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  gender?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  birthDate?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  financialGoal?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  targetSavingsRate?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -296,6 +380,10 @@ export type UserCreateInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -313,6 +401,10 @@ export type UserUncheckedCreateInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -330,6 +422,10 @@ export type UserUpdateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -347,6 +443,10 @@ export type UserUncheckedUpdateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -364,6 +464,10 @@ export type UserCreateManyInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -376,6 +480,10 @@ export type UserUpdateManyMutationInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -388,6 +496,10 @@ export type UserUncheckedUpdateManyInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -405,8 +517,16 @@ export type UserCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  birthDate?: Prisma.SortOrder
+  financialGoal?: Prisma.SortOrder
+  targetSavingsRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  targetSavingsRate?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -417,6 +537,10 @@ export type UserMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  birthDate?: Prisma.SortOrder
+  financialGoal?: Prisma.SortOrder
+  targetSavingsRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -429,8 +553,16 @@ export type UserMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  birthDate?: Prisma.SortOrder
+  financialGoal?: Prisma.SortOrder
+  targetSavingsRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  targetSavingsRate?: Prisma.SortOrder
 }
 
 export type UserCreateNestedOneWithoutAccountsInput = {
@@ -515,6 +647,10 @@ export type UserCreateWithoutAccountsInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -531,6 +667,10 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -563,6 +703,10 @@ export type UserUpdateWithoutAccountsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -579,6 +723,10 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -595,6 +743,10 @@ export type UserCreateWithoutSessionsInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -611,6 +763,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -643,6 +799,10 @@ export type UserUpdateWithoutSessionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -659,6 +819,10 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -675,6 +839,10 @@ export type UserCreateWithoutCategoriesInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -691,6 +859,10 @@ export type UserUncheckedCreateWithoutCategoriesInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -723,6 +895,10 @@ export type UserUpdateWithoutCategoriesInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -739,6 +915,10 @@ export type UserUncheckedUpdateWithoutCategoriesInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -755,6 +935,10 @@ export type UserCreateWithoutTransactionsInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -771,6 +955,10 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -803,6 +991,10 @@ export type UserUpdateWithoutTransactionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -819,6 +1011,10 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -835,6 +1031,10 @@ export type UserCreateWithoutBudgetsInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -851,6 +1051,10 @@ export type UserUncheckedCreateWithoutBudgetsInput = {
   name?: string | null
   image?: string | null
   currency?: string | null
+  gender?: string | null
+  birthDate?: Date | string | null
+  financialGoal?: string | null
+  targetSavingsRate?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -883,6 +1087,10 @@ export type UserUpdateWithoutBudgetsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -899,6 +1107,10 @@ export type UserUncheckedUpdateWithoutBudgetsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  financialGoal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetSavingsRate?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -982,6 +1194,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   image?: boolean
   currency?: boolean
+  gender?: boolean
+  birthDate?: boolean
+  financialGoal?: boolean
+  targetSavingsRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1000,6 +1216,10 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   image?: boolean
   currency?: boolean
+  gender?: boolean
+  birthDate?: boolean
+  financialGoal?: boolean
+  targetSavingsRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1012,6 +1232,10 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   image?: boolean
   currency?: boolean
+  gender?: boolean
+  birthDate?: boolean
+  financialGoal?: boolean
+  targetSavingsRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1024,11 +1248,15 @@ export type UserSelectScalar = {
   name?: boolean
   image?: boolean
   currency?: boolean
+  gender?: boolean
+  birthDate?: boolean
+  financialGoal?: boolean
+  targetSavingsRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerified" | "passwordHash" | "name" | "image" | "currency" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerified" | "passwordHash" | "name" | "image" | "currency" | "gender" | "birthDate" | "financialGoal" | "targetSavingsRate" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -1057,6 +1285,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string | null
     image: string | null
     currency: string | null
+    gender: string | null
+    birthDate: Date | null
+    financialGoal: string | null
+    targetSavingsRate: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1494,6 +1726,10 @@ export interface UserFieldRefs {
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly image: Prisma.FieldRef<"User", 'String'>
   readonly currency: Prisma.FieldRef<"User", 'String'>
+  readonly gender: Prisma.FieldRef<"User", 'String'>
+  readonly birthDate: Prisma.FieldRef<"User", 'DateTime'>
+  readonly financialGoal: Prisma.FieldRef<"User", 'String'>
+  readonly targetSavingsRate: Prisma.FieldRef<"User", 'Int'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

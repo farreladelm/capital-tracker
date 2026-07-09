@@ -63,6 +63,12 @@ model User {
   // Locked to a single currency (e.g., 'USD', 'JPY') after onboarding.
   currency      String?   
   
+  // Expanded Profile Fields
+  gender            String?   // e.g., "MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"
+  birthDate         DateTime? // Stored in UTC
+  financialGoal     String?   // e.g., "TRACKING", "DEBT_PAYOFF", "EMERGENCY_FUND", "BIG_PURCHASE"
+  targetSavingsRate Int?      // Percentage integer (0 to 100)
+  
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

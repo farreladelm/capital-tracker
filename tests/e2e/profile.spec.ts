@@ -24,12 +24,43 @@ test.describe('Profile Page', () => {
     await nameInput.clear();
     await nameInput.fill('Jane Doe');
 
+    // Update Gender
+    await page.click('button:has-text("Male")');
+
+    // Update Birth Date
+    await page.fill('input[type="date"]', '1995-12-17');
+
+    // Update Financial Goal
+    await page.selectOption('select[name="financialGoal"]', 'DEBT_PAYOFF');
+
+    // Update Target Savings Rate
+    await page.locator('input[type="range"]').fill('30');
+
     // Click Save Changes
     const saveButton = page.locator('button[type="submit"]', { hasText: 'Save Changes' });
     await saveButton.click();
 
     // 5. Verify the success toast message from sonner
     await expect(page.locator('text=Changes saved successfully!')).toBeVisible({ timeout: 15000 });
+
+    // Reload page to verify changes persisted
+    await page.reload();
+    await page.waitForURL('**/account');
+
+    // Check display name
+    await expect(page.locator('input[name="name"]')).toHaveValue('Jane Doe');
+    
+    // Check gender button active styling or hidden input value
+    await expect(page.locator('input[name="gender"]')).toHaveValue('MALE');
+    
+    // Check birth date
+    await expect(page.locator('input[type="date"]')).toHaveValue('1995-12-17');
+    
+    // Check financial goal
+    await expect(page.locator('select[name="financialGoal"]')).toHaveValue('DEBT_PAYOFF');
+    
+    // Check target savings rate
+    await expect(page.locator('input[type="range"]')).toHaveValue('30');
 
     // 6. Verify categories page link works
     const categoriesLink = page.locator('a', { hasText: 'Manage Categories' });

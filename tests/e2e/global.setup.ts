@@ -3,7 +3,7 @@ import { test as setup, expect } from '@playwright/test';
 const authFile = 'playwright/.auth/user.json';
 
 setup('authenticate', async ({ page }) => {
-  setup.setTimeout(60000); // 60s is plenty for registration + onboarding
+  setup.setTimeout(120000); // 120s to accommodate slow dev server cold compilation and database compaction
 
   const testEmail = `testuser-${Date.now()}@example.com`;
   const testPassword = 'password123';

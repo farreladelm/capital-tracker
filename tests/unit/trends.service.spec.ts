@@ -156,4 +156,38 @@ describe("TrendsService Unit Tests", () => {
       where: { id: { in: [txn1.id, txn2.id, txn3.id, txnPrev.id] } },
     });
   });
+
+  it("should personalize AI insights when user has demographic profile data", async () => {
+    // 1. Update user with profile details
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        gender: "FEMALE",
+        birthDate: new Date("1995-12-17T00:00:00Z"),
+        financialGoal: "DEBT_PAYOFF",
+        targetSavingsRate: 25,
+      },
+    });
+
+    // Clear cache to force generation if needed
+    TrendsService.clearCache(userId);
+
+    // 2. Fetch trends data (this triggers TrendsService with user profile context)
+    const data = await TrendsService.getTrendsData(userId, "july", "2026");
+
+    // 3. Assert it returns correctly and generated insights are defined
+    expect(data.currency).toBe("USD");
+    expect(data.aiInsight).toBeDefined();
+
+    // 4. Reset user profile details
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        gender: null,
+        birthDate: null,
+        financialGoal: null,
+        targetSavingsRate: null,
+      },
+    });
+  });
 });

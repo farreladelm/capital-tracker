@@ -6,11 +6,16 @@ import { updateProfile } from "@/app/actions/profile";
 import { logout } from "@/app/actions/auth";
 import Link from "next/link";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 type UserProfile = {
   name: string;
   email: string;
   currency: string;
+  gender: string | null;
+  birthDate: string | null;
+  financialGoal: string | null;
+  targetSavingsRate: number | null;
 };
 
 type AccountClientProps = {
@@ -26,6 +31,10 @@ export function AccountClient({ user }: AccountClientProps) {
   );
 
   const [nameValue, setNameValue] = useState(user.name);
+  const [genderValue, setGenderValue] = useState<string>(user.gender || "");
+  const [birthDateValue, setBirthDateValue] = useState<string>(user.birthDate || "");
+  const [financialGoalValue, setFinancialGoalValue] = useState<string>(user.financialGoal || "");
+  const [targetSavingsRateValue, setTargetSavingsRateValue] = useState<number>(user.targetSavingsRate || 0);
 
   // Sync state changes with toast notifications
   useEffect(() => {
@@ -33,6 +42,22 @@ export function AccountClient({ user }: AccountClientProps) {
       toast.success("Changes saved successfully!");
     }
   }, [state]);
+
+  const isModified =
+    nameValue !== user.name ||
+    genderValue !== (user.gender || "") ||
+    birthDateValue !== (user.birthDate || "") ||
+    financialGoalValue !== (user.financialGoal || "") ||
+    targetSavingsRateValue !== (user.targetSavingsRate || 0);
+
+  const isSubmitDisabled = isPending || !nameValue.trim() || !isModified;
+
+  const genders = [
+    { id: "MALE", label: "Male", icon: "👨" },
+    { id: "FEMALE", label: "Female", icon: "👩" },
+    { id: "OTHER", label: "Other", icon: "🧑" },
+    { id: "PREFER_NOT_TO_SAY", label: "Prefer not to say", icon: "🤐" },
+  ];
 
   return (
     <div className="flex flex-col gap-6 w-full pb-12">
@@ -69,7 +94,7 @@ export function AccountClient({ user }: AccountClientProps) {
                 <span className="font-headline-md text-sm text-on-surface">Profile Identity</span>
               </div>
               
-              <form action={formAction} className="flex flex-col gap-4">
+              <form action={formAction} className="flex flex-col gap-5">
                 <FormField
                   id="profile-name"
                   label="Display Name"
@@ -83,9 +108,116 @@ export function AccountClient({ user }: AccountClientProps) {
                   placeholder="Your display name"
                 />
 
+                {/* Gender pills */}
+                <div className="flex flex-col gap-1.5 w-full">
+                  <span className="text-[11px] font-label-md uppercase tracking-[0.06em] text-on-surface-variant select-none">
+                    Gender
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {genders.map((g) => {
+                      const isActive = genderValue === g.id;
+                      return (
+                        <button
+                          key={g.id}
+                          type="button"
+                          onClick={() => setGenderValue(g.id)}
+                          disabled={isPending}
+                          className={cn(
+                            "h-8 px-3.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 active-press cursor-pointer border select-none",
+                            isActive
+                              ? "bg-primary text-on-primary border-primary shadow-sm"
+                              : "bg-surface-container hover:bg-surface-container-high border-surface-variant/20 text-secondary"
+                          )}
+                        >
+                          <span className="text-sm leading-none">{g.icon}</span>
+                          <span>{g.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <input type="hidden" name="gender" value={genderValue} />
+                </div>
+
+                {/* Birth Date */}
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label htmlFor="birthDate" className="text-[11px] font-label-md uppercase tracking-[0.06em] text-on-surface-variant select-none">
+                    Birth Date
+                  </label>
+                  <div className="relative flex items-center bg-surface-container-low border border-surface-variant/20 rounded-xl px-4 py-2.5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all duration-200">
+                    <span className="material-symbols-outlined text-[18px] text-on-surface-variant/70 mr-2">
+                      calendar_today
+                    </span>
+                    <input
+                      type="date"
+                      id="birthDate"
+                      name="birthDate"
+                      value={birthDateValue}
+                      onChange={(e) => setBirthDateValue(e.target.value)}
+                      disabled={isPending}
+                      className="bg-transparent border-0 outline-none w-full text-xs font-body text-on-surface select-none focus:ring-0 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Financial Goal */}
+                <div className="flex flex-col gap-1.5 w-full">
+                  <label htmlFor="financialGoal" className="text-[11px] font-label-md uppercase tracking-[0.06em] text-on-surface-variant select-none">
+                    Primary Financial Goal
+                  </label>
+                  <div className="relative flex items-center bg-surface-container-low border border-surface-variant/20 rounded-xl px-4 py-2.5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all duration-200">
+                    <span className="material-symbols-outlined text-[18px] text-on-surface-variant/70 mr-2">
+                      target
+                    </span>
+                    <select
+                      id="financialGoal"
+                      name="financialGoal"
+                      value={financialGoalValue}
+                      onChange={(e) => setFinancialGoalValue(e.target.value)}
+                      disabled={isPending}
+                      className="bg-transparent border-0 outline-none w-full text-xs font-body text-on-surface focus:ring-0 focus:outline-none cursor-pointer appearance-none pr-8"
+                    >
+                      <option value="">Select a goal</option>
+                      <option value="TRACKING">📊 Simple Expense Tracking</option>
+                      <option value="DEBT_PAYOFF">💳 Debt Payoff Focus</option>
+                      <option value="EMERGENCY_FUND">🛡️ Build Emergency Fund</option>
+                      <option value="BIG_PURCHASE">🏠 Save for Big Purchase</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-4 text-[18px] text-on-surface-variant/50 pointer-events-none">
+                      unfold_more
+                    </span>
+                  </div>
+                </div>
+
+                {/* Target Savings Rate */}
+                <div className="flex flex-col gap-1.5 w-full">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="targetSavingsRate" className="text-[11px] font-label-md uppercase tracking-[0.06em] text-on-surface-variant select-none">
+                      Target Savings Rate
+                    </label>
+                    <span className="text-xs font-headline font-bold text-primary">{targetSavingsRateValue}%</span>
+                  </div>
+                  <div className="flex items-center gap-4 bg-surface-container-low border border-surface-variant/20 rounded-xl px-4 py-3">
+                    <span className="material-symbols-outlined text-[18px] text-on-surface-variant/70">
+                      savings
+                    </span>
+                    <input
+                      type="range"
+                      id="targetSavingsRate"
+                      name="targetSavingsRate"
+                      min="0"
+                      max="100"
+                      step="1"
+                      value={targetSavingsRateValue}
+                      onChange={(e) => setTargetSavingsRateValue(parseInt(e.target.value, 10))}
+                      disabled={isPending}
+                      className="w-full accent-primary h-1 bg-surface-container-high rounded-lg appearance-none cursor-pointer"
+                    />
+                  </div>
+                </div>
+
                 <button
                   type="submit"
-                  disabled={isPending || !nameValue.trim() || nameValue === user.name}
+                  disabled={isSubmitDisabled}
                   className="w-full rounded-full bg-primary py-3.5 font-headline font-bold text-on-primary transition-all hover:opacity-90 active-press disabled:opacity-40 text-[14px] tracking-[-0.01em] flex items-center justify-center gap-2 cursor-pointer mt-2"
                 >
                   {isPending ? (
