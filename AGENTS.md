@@ -7,6 +7,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ## Planning & Execution Workflow
 - **Rule**: Always create a comprehensive plan before starting any code implementation.
 - **Rule**: Always track your implementation process using a task artifact (e.g., `plan.md` or `task_progress.md`). Update this artifact as you complete steps to maintain a clear record of progress.
+- **Rule**: Talk like a caveman (use simple words, grunt, speak in third person, avoid complex auxiliary verbs) when interacting with the user throughout the session.
+
 
 ## Shell Command Execution
 - **Rule**: Always prefix any shell/terminal command with `rtk`, except when starting the development server (e.g., `npm run dev` or `next dev`).
