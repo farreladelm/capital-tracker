@@ -159,7 +159,7 @@ export function EditTransactionModal({ isOpen, onClose, txn, categories, currenc
             min="0"
             defaultValue={(txn.amountMinor / 100).toFixed(2)}
             required
-            prefix={currency}
+            iconPrefix={currency}
             className="font-headline font-bold text-lg"
           />
 

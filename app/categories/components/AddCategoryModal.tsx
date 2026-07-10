@@ -204,7 +204,7 @@ export function AddCategoryModal({ currency, isOpen, onClose }: AddCategoryModal
                     step="0.01"
                     min="0.01"
                     placeholder="0.00 (Optional)"
-                    prefix={currency}
+                    iconPrefix={currency}
                   />
                 </div>
                 <select

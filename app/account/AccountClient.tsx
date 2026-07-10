@@ -147,7 +147,7 @@ export function AccountClient({ user }: AccountClientProps) {
                   value={birthDateValue}
                   onChange={(e) => setBirthDateValue(e.target.value)}
                   disabled={isPending}
-                  prefix={
+                  iconPrefix={
                     <span className="material-symbols-outlined text-[18px]">
                       calendar_today
                     </span>
@@ -249,7 +249,7 @@ export function AccountClient({ user }: AccountClientProps) {
                     value={user.email}
                     readOnly
                     disabled
-                    prefix={
+                    iconPrefix={
                       <span className="material-symbols-outlined text-[18px]">
                         mail
                       </span>
@@ -262,7 +262,7 @@ export function AccountClient({ user }: AccountClientProps) {
                     value={user.currency}
                     readOnly
                     disabled
-                    prefix={
+                    iconPrefix={
                       <span className="material-symbols-outlined text-[18px]">
                         payments
                       </span>

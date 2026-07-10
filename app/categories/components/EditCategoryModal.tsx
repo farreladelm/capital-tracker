@@ -244,7 +244,7 @@ export function EditCategoryModal({ category, currency, isOpen, onClose }: EditC
                     min="0.01"
                     defaultValue={initialBudgetLimit}
                     placeholder="0.00 (Optional)"
-                    prefix={currency}
+                    iconPrefix={currency}
                   />
                 </div>
                 <select
