@@ -2,6 +2,7 @@
 
 import { formatCurrency } from "@/lib/format";
 import type { CategoryModel as Category, TransactionModel as Transaction } from "@/generated/prisma/models";
+import { CategoryIcon } from "./CategoryIcon";
 
 type TransactionSuccessCardProps = {
   transaction: Transaction;
@@ -45,9 +46,7 @@ export function TransactionSuccessCard({
         <div className="flex justify-between items-center">
           <span className="font-body-md text-on-surface-variant">Category</span>
           <div className="flex items-center gap-1.5 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full">
-            <span className="text-sm flex items-center justify-center shrink-0 w-4 h-4 select-none leading-none">
-              {category?.icon || "❓"}
-            </span>
+            <CategoryIcon icon={category?.icon || "question_mark"} className="text-xs w-4 h-4" />
             <span className="font-label-sm leading-none">{category?.name || "Uncategorized"}</span>
           </div>
         </div>

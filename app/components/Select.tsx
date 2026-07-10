@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CategoryIcon } from "./CategoryIcon";
 
 export type SelectOption = {
   value: string;
@@ -21,12 +22,20 @@ type SelectProps = {
   groups: SelectGroup[];
   required?: boolean;
   className?: string;
+  onChange?: (value: string) => void;
 };
 
-export function Select({ name, defaultValue, groups, required = false, className }: SelectProps) {
+export function Select({ name, defaultValue, groups, required = false, className, onChange }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(defaultValue || "");
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Sync defaultValue when changed by parent
+  useEffect(() => {
+    if (defaultValue !== undefined) {
+      setSelectedValue(defaultValue);
+    }
+  }, [defaultValue]);
 
   // Close when clicking outside
   useEffect(() => {
@@ -57,7 +66,7 @@ export function Select({ name, defaultValue, groups, required = false, className
         <span className="flex items-center gap-2">
           {selectedOption ? (
             <>
-              {selectedOption.icon && <span className="select-none">{selectedOption.icon}</span>}
+              {selectedOption.icon && <CategoryIcon icon={selectedOption.icon} className="w-5 h-5" />}
               <span>{selectedOption.label}</span>
             </>
           ) : (
@@ -88,6 +97,7 @@ export function Select({ name, defaultValue, groups, required = false, className
                       onClick={() => {
                         setSelectedValue(option.value);
                         setIsOpen(false);
+                        if (onChange) onChange(option.value);
                       }}
                       className={cn(
                         "flex items-center justify-between w-full px-3 py-2 rounded-xl text-sm font-body cursor-pointer text-left transition-colors hover:bg-surface-container-low",
@@ -95,7 +105,7 @@ export function Select({ name, defaultValue, groups, required = false, className
                       )}
                     >
                       <span className="flex items-center gap-2">
-                        {option.icon && <span className="select-none">{option.icon}</span>}
+                        {option.icon && <CategoryIcon icon={option.icon} className="w-5 h-5 text-on-surface-variant/80" />}
                         <span>{option.label}</span>
                       </span>
                       {isSelected && <Check size={16} className="text-primary shrink-0" />}

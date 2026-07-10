@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { format, isToday, isYesterday } from "date-fns";
 import { formatCurrency } from "@/lib/format";
+import { CategoryIcon } from "./CategoryIcon";
 
 type TransactionWithCategory = {
   id: string;
@@ -29,19 +30,18 @@ export function TransactionCard({
   showDate?: boolean;
   onClick?: () => void;
 }) {
+  const [dateText, setDateText] = useState<string | null>(null);
   const isIncome = txn.type === "INCOME";
-  
-  const [dateText, setDateText] = useState("");
 
   useEffect(() => {
     if (showDate) {
-      const d = new Date(txn.date);
+      const d = typeof txn.date === "string" ? new Date(txn.date) : txn.date;
       if (isToday(d)) {
         setDateText("Today");
       } else if (isYesterday(d)) {
         setDateText("Yesterday");
       } else {
-        setDateText(format(d, "dd MMM"));
+        setDateText(format(d, "MMM d, yyyy"));
       }
     }
   }, [txn.date, showDate]);
@@ -53,8 +53,7 @@ export function TransactionCard({
     >
       <div className="flex items-center gap-4 min-w-0 flex-1">
         <div className="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-primary aspect-square shrink-0">
-          {/* We assume txn.category.icon might be an emoji or an icon name. We'll render it as text for now. If it's a material icon string, we can conditionally add the class. For safety, just span. */}
-          <span className="text-2xl flex items-center justify-center">{txn.category.icon}</span>
+          <CategoryIcon icon={txn.category.icon} />
         </div>
         <div className="flex flex-col min-w-0 flex-1">
           <span className="text-sm font-semibold text-on-background truncate">{txn.description}</span>
