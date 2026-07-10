@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { format, isToday, isYesterday } from "date-fns";
 import { formatCurrency } from "@/lib/format";
-import { CategoryIcon } from "./CategoryIcon";
+import { CategoryIconBadge } from "./CategoryIconBadge";
 
 type TransactionWithCategory = {
   id: string;
@@ -52,9 +52,7 @@ export function TransactionCard({
       className={`flex items-center justify-between py-4 border-b border-surface-variant last:border-b-0 gap-4 ${onClick ? 'cursor-pointer hover:bg-surface-variant/50 transition-colors' : ''}`}
     >
       <div className="flex items-center gap-4 min-w-0 flex-1">
-        <div className="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-primary aspect-square shrink-0">
-          <CategoryIcon icon={txn.category.icon} />
-        </div>
+        <CategoryIconBadge icon={txn.category.icon} color={txn.category.color} size="md" />
         <div className="flex flex-col min-w-0 flex-1">
           <span className="text-sm font-semibold text-on-background truncate">{txn.description}</span>
           <span className="font-label-sm text-secondary truncate">

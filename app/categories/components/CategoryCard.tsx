@@ -1,7 +1,7 @@
 "use client";
 
 import { formatCurrency } from "@/lib/utils";
-import { CategoryIcon } from "@/app/components/CategoryIcon";
+import { CategoryIconBadge } from "@/app/components/CategoryIconBadge";
 import { ChevronRight } from "lucide-react";
 
 type CategoryWithDetails = {
@@ -68,15 +68,7 @@ export function CategoryCard({
       <div className="flex items-center justify-between gap-4">
         {/* Left Side: Icon and Name */}
         <div className="flex items-center gap-3.5 min-w-0">
-          <div 
-            className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-            style={{ 
-              backgroundColor: `${category.color}15`, 
-              color: category.color 
-            }}
-          >
-            <CategoryIcon icon={category.icon} className="text-2xl" />
-          </div>
+          <CategoryIconBadge icon={category.icon} color={category.color} size="md" />
           <div className="min-w-0">
             <h3 className="font-headline text-[14px] font-bold text-on-surface truncate leading-snug">
               {category.name}
