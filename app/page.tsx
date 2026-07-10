@@ -112,10 +112,11 @@ export default async function Dashboard() {
         </div>
         <section className="grid grid-cols-2 gap-gutter">
           {/* Categories Summary Card */}
-          <div className="bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow flex flex-col justify-between h-40">
-            <div className="flex items-center gap-2 text-primary">
+          <Link href="/categories" className="bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow flex flex-col justify-between h-40 hover:scale-[1.02] active:scale-[0.98] hover:bg-surface-container-low transition-all duration-200 group cursor-pointer">
+            <div className="flex items-center gap-2 text-primary w-full">
               <span className="material-symbols-outlined" style={{ fontVariationSettings: `"FILL" 1` }}>pie_chart</span>
               <span className="font-label-md font-semibold text-primary">Categories</span>
+              <span className="material-symbols-outlined ml-auto text-secondary/50 group-hover:text-primary transition-colors" style={{ fontVariationSettings: `"FILL" 0` }}>chevron_right</span>
             </div>
             <div>
               {topExpense1 && (
@@ -141,7 +142,7 @@ export default async function Dashboard() {
                 </>
               )}
             </div>
-          </div>
+          </Link>
 
           {/* Weekly Trend Card */}
           <div className="bg-primary text-on-primary rounded-xl p-container-padding soft-card-shadow flex flex-col justify-between h-40 relative overflow-hidden">

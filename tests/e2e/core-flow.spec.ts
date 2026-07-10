@@ -25,6 +25,18 @@ test.describe('Core User Flow', () => {
     await expect(page.locator('text=$0').first()).toBeVisible();
   });
 
+  test('should navigate to categories page when clicking categories card', async () => {
+    await page.goto('/');
+    await page.waitForURL('**/');
+    await page.locator('a[href="/categories"]').first().click();
+    await page.waitForURL('**/categories');
+    await expect(page.locator('h1:has-text("Categories")').first()).toBeVisible();
+    
+    // Navigate back to home to keep the shared page state consistent for subsequent tests
+    await page.goto('/');
+    await page.waitForURL('**/');
+  });
+
   test('should add a transaction via Add Transaction Modal', async () => {
     console.log('Opening add transaction modal...');
     await page.locator('nav button').filter({ hasText: 'add' }).click();
