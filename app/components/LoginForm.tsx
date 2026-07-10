@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { login } from "@/app/actions/auth";
-import FormField from "./FormField";
+import { Input } from "./Input";
 
 export default function LoginForm() {
   const [state, action, isPending] = useActionState(
@@ -23,7 +23,7 @@ export default function LoginForm() {
         </div>
       )}
 
-      <FormField
+      <Input
         id="login-email"
         label="Email"
         name="email"
@@ -33,7 +33,7 @@ export default function LoginForm() {
         disabled={isPending}
       />
 
-      <FormField
+      <Input
         id="login-password"
         label="Password"
         name="password"

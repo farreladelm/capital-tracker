@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { register } from "@/app/actions/auth";
-import FormField from "./FormField";
+import { Input } from "./Input";
 
 export default function RegisterForm() {
   const [state, action, isPending] = useActionState(
@@ -23,7 +23,7 @@ export default function RegisterForm() {
         </div>
       )}
 
-      <FormField
+      <Input
         id="register-name"
         label={
           <>
@@ -40,7 +40,7 @@ export default function RegisterForm() {
         disabled={isPending}
       />
 
-      <FormField
+      <Input
         id="register-email"
         label="Email"
         name="email"
@@ -50,7 +50,7 @@ export default function RegisterForm() {
         disabled={isPending}
       />
 
-      <FormField
+      <Input
         id="register-password"
         label="Password"
         name="password"

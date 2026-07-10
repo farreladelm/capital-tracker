@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState, useEffect } from "react";
-import FormField from "@/app/components/FormField";
+import { Input } from "@/app/components/Input";
 import { updateProfile } from "@/app/actions/profile";
 import { logout } from "@/app/actions/auth";
 import Link from "next/link";
@@ -95,7 +95,7 @@ export function AccountClient({ user }: AccountClientProps) {
               </div>
               
               <form action={formAction} className="flex flex-col gap-5">
-                <FormField
+                <Input
                   id="profile-name"
                   label="Display Name"
                   name="name"
@@ -139,34 +139,31 @@ export function AccountClient({ user }: AccountClientProps) {
                 </div>
 
                 {/* Birth Date */}
-                <div className="flex flex-col gap-1.5 w-full">
-                  <label htmlFor="birthDate" className="text-[11px] font-label-md uppercase tracking-[0.06em] text-on-surface-variant select-none">
-                    Birth Date
-                  </label>
-                  <div className="relative flex items-center bg-surface-container-low border border-surface-variant/20 rounded-xl px-4 py-2.5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all duration-200">
-                    <span className="material-symbols-outlined text-[18px] text-on-surface-variant/70 mr-2">
+                <Input
+                  id="birthDate"
+                  label="Birth Date"
+                  type="date"
+                  name="birthDate"
+                  value={birthDateValue}
+                  onChange={(e) => setBirthDateValue(e.target.value)}
+                  disabled={isPending}
+                  prefix={
+                    <span className="material-symbols-outlined text-[18px]">
                       calendar_today
                     </span>
-                    <input
-                      type="date"
-                      id="birthDate"
-                      name="birthDate"
-                      value={birthDateValue}
-                      onChange={(e) => setBirthDateValue(e.target.value)}
-                      disabled={isPending}
-                      className="bg-transparent border-0 outline-none w-full text-xs font-body text-on-surface select-none focus:ring-0 focus:outline-none"
-                    />
-                  </div>
-                </div>
+                  }
+                />
 
                 {/* Financial Goal */}
                 <div className="flex flex-col gap-1.5 w-full">
-                  <label htmlFor="financialGoal" className="text-[11px] font-label-md uppercase tracking-[0.06em] text-on-surface-variant select-none">
+                  <label htmlFor="financialGoal" className="font-label-sm text-on-surface-variant uppercase tracking-wider text-[10px] select-none">
                     Primary Financial Goal
                   </label>
-                  <div className="relative flex items-center bg-surface-container-low border border-surface-variant/20 rounded-xl px-4 py-2.5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all duration-200">
-                    <span className="material-symbols-outlined text-[18px] text-on-surface-variant/70 mr-2">
-                      target
+                  <div className="relative flex items-center w-full">
+                    <span className="absolute left-4 text-sm font-semibold text-on-surface-variant/40 select-none flex items-center justify-center">
+                      <span className="material-symbols-outlined text-[18px]">
+                        target
+                      </span>
                     </span>
                     <select
                       id="financialGoal"
@@ -174,7 +171,7 @@ export function AccountClient({ user }: AccountClientProps) {
                       value={financialGoalValue}
                       onChange={(e) => setFinancialGoalValue(e.target.value)}
                       disabled={isPending}
-                      className="bg-transparent border-0 outline-none w-full text-xs font-body text-on-surface focus:ring-0 focus:outline-none cursor-pointer appearance-none pr-8"
+                      className="w-full rounded-2xl bg-surface py-3 pl-10 pr-10 text-sm font-body text-on-surface focus:outline-none border border-outline-variant/20 transition-all cursor-pointer appearance-none focus:border-primary/50 focus:ring-1 focus:ring-primary/10"
                     >
                       <option value="">Select a goal</option>
                       <option value="TRACKING">📊 Simple Expense Tracking</option>
@@ -247,30 +244,31 @@ export function AccountClient({ user }: AccountClientProps) {
 
                 <div className="flex flex-col gap-4">
                   {/* Email details (non-editable) */}
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-label-sm uppercase tracking-[0.06em] text-on-surface-variant select-none">
-                      Registered Email
-                    </span>
-                    <div className="flex items-center gap-2 bg-surface-container-low px-4 py-2.5 rounded-xl border border-surface-variant/20">
-                      <span className="material-symbols-outlined text-[16px] text-on-surface-variant/70">
+                  <Input
+                    label="Registered Email"
+                    value={user.email}
+                    readOnly
+                    disabled
+                    prefix={
+                      <span className="material-symbols-outlined text-[18px]">
                         mail
                       </span>
-                      <span className="font-body text-on-surface text-xs truncate">{user.email}</span>
-                    </div>
-                  </div>
+                    }
+                  />
 
                   {/* Base Currency (non-editable) */}
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-label-sm uppercase tracking-[0.06em] text-on-surface-variant select-none">
-                      Base Currency
-                    </span>
-                    <div className="flex items-center gap-2 bg-surface-container-low px-4 py-2.5 rounded-xl border border-surface-variant/20">
-                      <span className="material-symbols-outlined text-[16px] text-on-surface-variant/70">
+                  <Input
+                    label="Base Currency"
+                    value={user.currency}
+                    readOnly
+                    disabled
+                    prefix={
+                      <span className="material-symbols-outlined text-[18px]">
                         payments
                       </span>
-                      <span className="font-body text-on-surface text-xs font-semibold">{user.currency}</span>
-                    </div>
-                  </div>
+                    }
+                    className="font-semibold"
+                  />
                 </div>
               </div>
 

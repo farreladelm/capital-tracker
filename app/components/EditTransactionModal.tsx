@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { X, Trash2, Loader2 } from "lucide-react";
 import { updateTransaction, deleteTransaction } from "../actions/transaction";
 import { Select } from "./Select";
+import { Input } from "./Input";
 
 type Transaction = {
   id: string;
@@ -150,43 +151,30 @@ export function EditTransactionModal({ isOpen, onClose, txn, categories, currenc
           <input type="hidden" name="id" value={txn.id} />
           
           {/* Amount */}
-          <div className="flex flex-col gap-1.5">
-            <label className="font-label text-[11px] font-bold text-secondary uppercase tracking-wider pl-1">
-              Amount ({currency})
-            </label>
-            <div className="relative flex items-center">
-              <span className="absolute left-4 font-headline text-lg font-bold text-on-surface-variant">
-                {currency}
-              </span>
-              <input
-                name="amount"
-                type="number"
-                step="0.01"
-                min="0"
-                defaultValue={(txn.amountMinor / 100).toFixed(2)}
-                required
-                className="w-full rounded-2xl bg-surface-container-low py-3 pl-12 pr-4 text-lg font-headline font-bold text-on-surface focus:bg-surface-container-high focus:outline-none transition-colors border-none"
-              />
-            </div>
-          </div>
+          <Input
+            label={`Amount (${currency})`}
+            name="amount"
+            type="number"
+            step="0.01"
+            min="0"
+            defaultValue={(txn.amountMinor / 100).toFixed(2)}
+            required
+            prefix={currency}
+            className="font-headline font-bold text-lg"
+          />
 
           {/* Description */}
-          <div className="flex flex-col gap-1.5">
-            <label className="font-label text-[11px] font-bold text-secondary uppercase tracking-wider pl-1">
-              Description
-            </label>
-            <input
-              name="description"
-              type="text"
-              defaultValue={txn.description}
-              required
-              className="w-full rounded-2xl bg-surface-container-low p-3 font-body text-sm text-on-surface focus:bg-surface-container-high focus:outline-none transition-colors border-none"
-            />
-          </div>
+          <Input
+            label="Description"
+            name="description"
+            type="text"
+            defaultValue={txn.description}
+            required
+          />
 
           {/* Category */}
           <div className="flex flex-col gap-1.5">
-            <label className="font-label text-[11px] font-bold text-secondary uppercase tracking-wider pl-1">
+            <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-[10px] select-none">
               Category
             </label>
             <Select
@@ -198,18 +186,13 @@ export function EditTransactionModal({ isOpen, onClose, txn, categories, currenc
           </div>
 
           {/* Date */}
-          <div className="flex flex-col gap-1.5">
-            <label className="font-label text-[11px] font-bold text-secondary uppercase tracking-wider pl-1">
-              Date
-            </label>
-            <input
-              name="date"
-              type="date"
-              defaultValue={new Date(txn.date).toISOString().split("T")[0]}
-              required
-              className="w-full rounded-2xl bg-surface-container-low p-3 font-body text-sm text-on-surface focus:bg-surface-container-high focus:outline-none transition-colors border-none"
-            />
-          </div>
+          <Input
+            label="Date"
+            name="date"
+            type="date"
+            defaultValue={new Date(txn.date).toISOString().split("T")[0]}
+            required
+          />
 
           {/* Save Action Button */}
           <button

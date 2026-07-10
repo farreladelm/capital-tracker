@@ -61,7 +61,10 @@ export function Select({ name, defaultValue, groups, required = false, className
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between rounded-2xl bg-surface-container-low p-3 font-body text-sm text-on-surface hover:bg-surface-container-high focus:outline-none transition-colors border-none cursor-pointer"
+        className={cn(
+          "w-full flex items-center justify-between rounded-2xl bg-surface py-3 px-4 font-body text-sm text-on-surface hover:bg-surface-container-low focus:outline-none transition-all border border-outline-variant/50 cursor-pointer",
+          isOpen && "border-primary/50 ring-1 ring-primary/10"
+        )}
       >
         <span className="flex items-center gap-2">
           {selectedOption ? (
