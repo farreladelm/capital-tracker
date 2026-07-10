@@ -94,10 +94,20 @@ export default function TrendsPage() {
     const userLocale = trendsData.locale || "en-US";
 
 
-    const getStatusText = (spent: number, limit: number) => {
+    const getStatusText = (spent: number, limit: number, period: string) => {
       const diff = limit - spent;
       const formattedDiff = formatCurrency(Math.abs(diff), userCurrency, { locale: userLocale, compact: true });
-      return diff >= 0 ? `${formattedDiff} remaining` : `${formattedDiff} over limit`;
+      
+      let suffix = "";
+      if (period === "WEEKLY") suffix = " this week";
+      else if (period === "YEARLY") suffix = " this year";
+      else suffix = " remaining";
+
+      if (diff >= 0) {
+        return `${formattedDiff} remaining${suffix}`;
+      } else {
+        return `${formattedDiff} over limit${suffix}`;
+      }
     };
 
     return trendsData.budgets.map((b: any) => {
@@ -125,7 +135,7 @@ export default function TrendsPage() {
 
       return {
         ...b,
-        statusText: getStatusText(b.spent, b.limit),
+        statusText: getStatusText(b.spent, b.limit, b.period),
         statusColor,
         barColor,
         iconName,
@@ -426,6 +436,7 @@ export default function TrendsPage() {
                             </span>
                             <span className="text-[10px] font-medium text-secondary">
                               / {formatCurrency(budget.limit, userCurrency, { locale: userLocale, compact: true })}
+                              {budget.period === "WEEKLY" ? " / wk" : budget.period === "YEARLY" ? " / yr" : " / mo"}
                             </span>
                           </div>
                         </div>
