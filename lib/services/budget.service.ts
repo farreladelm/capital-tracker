@@ -29,7 +29,7 @@ export class BudgetService {
    * Sets or updates a budget for a category.
    * If amountMinor is null, the budget is deleted.
    */
-  static async setBudget(userId: string, categoryId: string, amountMinor: number | null) {
+  static async setBudget(userId: string, categoryId: string, amountMinor: number | null, period: string = "MONTHLY") {
     // Verify category exists and belongs to the user
     const category = await prisma.category.findUnique({
       where: { id: categoryId },
@@ -59,11 +59,13 @@ export class BudgetService {
       where: { categoryId },
       update: {
         amountMinor,
+        period,
       },
       create: {
         userId,
         categoryId,
         amountMinor,
+        period,
       },
       include: {
         category: {

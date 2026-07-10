@@ -26,7 +26,7 @@ describe("DashboardService Unit Tests", () => {
         name: "Food",
         type: "EXPENSE",
         color: "#FF5733",
-        icon: "🍔",
+        icon: "restaurant",
       },
     });
     foodCategoryId = foodCat.id;

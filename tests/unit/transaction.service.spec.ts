@@ -59,7 +59,7 @@ describe("TransactionService Unit Tests", () => {
         name: "Food",
         type: "EXPENSE",
         color: "#FF5733",
-        icon: "🍔",
+        icon: "restaurant",
       },
     });
     expenseCategoryId = expenseCat.id;
@@ -70,7 +70,7 @@ describe("TransactionService Unit Tests", () => {
         name: "Salary",
         type: "INCOME",
         color: "#4ECDC4",
-        icon: "💰",
+        icon: "monetization_on",
       },
     });
     incomeCategoryId = incomeCat.id;
@@ -81,7 +81,7 @@ describe("TransactionService Unit Tests", () => {
         name: "Other Category",
         type: "EXPENSE",
         color: "#FFFFFF",
-        icon: "📝",
+        icon: "build",
       },
     });
     otherCategoryId = otherCat.id;

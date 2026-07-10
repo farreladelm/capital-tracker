@@ -36,7 +36,7 @@ describe("CategoryService Unit Tests", () => {
         name: "Other Travel",
         type: "EXPENSE",
         color: "#000000",
-        icon: "✈️",
+        icon: "flight",
       },
     });
     otherCategoryId = otherCat.id;
@@ -62,7 +62,7 @@ describe("CategoryService Unit Tests", () => {
       name: "Food & Drinks",
       type: "EXPENSE",
       color: "#FF5733",
-      icon: "🍔",
+      icon: "restaurant",
     });
 
     expect(cat).not.toBeNull();
@@ -81,7 +81,7 @@ describe("CategoryService Unit Tests", () => {
         name: "Food & Drinks",
         type: "EXPENSE",
         color: "#000000",
-        icon: "🥤",
+        icon: "local_bar",
       })
     ).rejects.toThrow("CATEGORY_EXISTS");
   });
@@ -91,7 +91,7 @@ describe("CategoryService Unit Tests", () => {
       name: "Food & Drinks",
       type: "EXPENSE",
       color: "#111111",
-      icon: "🍕",
+      icon: "fastfood",
     });
     expect(cat).not.toBeNull();
     expect(cat.userId).toBe(otherUserId);
@@ -108,7 +108,7 @@ describe("CategoryService Unit Tests", () => {
             name: `Test Category ${i}`,
             type: "EXPENSE",
             color: "#FFFFFF",
-            icon: "📝",
+            icon: "build",
           },
         })
       );
@@ -123,7 +123,7 @@ describe("CategoryService Unit Tests", () => {
       name: "Category 50",
       type: "EXPENSE",
       color: "#FFFFFF",
-      icon: "📝",
+      icon: "build",
     });
     expect(cat50).not.toBeNull();
 
@@ -133,7 +133,7 @@ describe("CategoryService Unit Tests", () => {
         name: "Category 51",
         type: "EXPENSE",
         color: "#FFFFFF",
-        icon: "📝",
+        icon: "build",
       })
     ).rejects.toThrow("MAX_CATEGORIES_REACHED");
 
@@ -154,7 +154,7 @@ describe("CategoryService Unit Tests", () => {
 
     expect(updated.name).toBe("Food, Drinks & Snacks");
     expect(updated.color).toBe("#FFCC00");
-    expect(updated.icon).toBe("🍔"); // remains unchanged
+    expect(updated.icon).toBe("restaurant"); // remains unchanged
   });
 
   it("should fail to update a category owned by another user", async () => {
@@ -192,6 +192,34 @@ describe("CategoryService Unit Tests", () => {
     await prisma.transaction.delete({
       where: { id: transaction.id },
     });
+  });
+
+  it("should retrieve categories with counts and budget information", async () => {
+    const cat = await CategoryService.createCategory(userId, {
+      name: "Shopping Spec",
+      type: "EXPENSE",
+      color: "#3357FF",
+      icon: "shopping_cart",
+    });
+
+    await prisma.budget.create({
+      data: {
+        userId,
+        categoryId: cat.id,
+        amountMinor: 10000,
+        period: "WEEKLY",
+      },
+    });
+
+    const list = await CategoryService.getCategoriesWithCounts(userId);
+    const shoppingCat = list.find((c) => c.id === cat.id);
+    expect(shoppingCat).toBeDefined();
+    expect(shoppingCat?.budget).not.toBeNull();
+    expect(shoppingCat?.budget?.amountMinor).toBe(10000);
+    expect(shoppingCat?.budget?.period).toBe("WEEKLY");
+
+    // Clean up
+    await prisma.category.delete({ where: { id: cat.id } });
   });
 
   it("should successfully delete a category with no transactions", async () => {

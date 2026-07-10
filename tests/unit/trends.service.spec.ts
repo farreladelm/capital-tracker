@@ -26,7 +26,7 @@ describe("TrendsService Unit Tests", () => {
         name: "Food",
         type: "EXPENSE",
         color: "#4c4bc6",
-        icon: "🍔",
+        icon: "restaurant",
       },
     });
     foodCategoryId = foodCat.id;
@@ -133,8 +133,9 @@ describe("TrendsService Unit Tests", () => {
       name: "Food",
       spent: 150,
       limit: 500,
-      icon: "🍔",
+      icon: "restaurant",
       color: "#4c4bc6",
+      period: "MONTHLY",
     });
 
     // Assert comparison stats

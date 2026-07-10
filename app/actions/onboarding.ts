@@ -21,12 +21,12 @@ export async function completeOnboarding(formData: FormData) {
 
   // Set currency and provision default categories
   const defaultCategories = [
-    { name: "Food", type: "EXPENSE", color: "#FF6B6B", icon: "🍔", userId: session.user.id },
-    { name: "Transport", type: "EXPENSE", color: "#4ECDC4", icon: "🚗", userId: session.user.id },
-    { name: "Utilities", type: "EXPENSE", color: "#45B7D1", icon: "⚡", userId: session.user.id },
-    { name: "Fun", type: "EXPENSE", color: "#96CEB4", icon: "🎉", userId: session.user.id },
-    { name: "Salary", type: "INCOME", color: "#FFEEAD", icon: "💰", userId: session.user.id },
-    { name: "Uncategorized", type: "EXPENSE", color: "#95A5A6", icon: "❓", userId: session.user.id },
+    { name: "Food", type: "EXPENSE", color: "#FF6B6B", icon: "restaurant", userId: session.user.id },
+    { name: "Transport", type: "EXPENSE", color: "#4ECDC4", icon: "directions_car", userId: session.user.id },
+    { name: "Utilities", type: "EXPENSE", color: "#45B7D1", icon: "electric_bolt", userId: session.user.id },
+    { name: "Fun", type: "EXPENSE", color: "#96CEB4", icon: "sports_esports", userId: session.user.id },
+    { name: "Salary", type: "INCOME", color: "#FFEEAD", icon: "monetization_on", userId: session.user.id },
+    { name: "Uncategorized", type: "EXPENSE", color: "#95A5A6", icon: "help", userId: session.user.id },
   ];
 
   await prisma.$transaction([

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { GoogleGenAI } from "@google/genai";
+import { startOfWeek, endOfWeek } from "date-fns";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -21,6 +22,7 @@ export type BudgetProgress = {
   limit: number;
   icon: string;
   color: string;
+  period: string;
 };
 
 export type TrendsData = {
@@ -172,21 +174,63 @@ export class TrendsService {
       include: { category: true },
     });
 
-    const budgetsProgressList: BudgetProgress[] = userBudgets.map((b) => {
-      // Calculate spent for this category during this month
-      const totalSpentMinor = currentTransactions
-        .filter((t) => t.categoryId === b.categoryId)
-        .reduce((sum, t) => sum + t.amountMinor, 0);
+    const today = new Date();
+    const isCurrentPeriod = (year === today.getUTCFullYear()) && (month === today.getUTCMonth() + 1);
+    const startOfCurrentWeek = startOfWeek(today, { weekStartsOn: 1 });
+    const endOfCurrentWeek = endOfWeek(today, { weekStartsOn: 1 });
+
+    const budgetsProgressList: BudgetProgress[] = await Promise.all(userBudgets.map(async (b) => {
+      let spentMinor = 0;
+      const budgetPeriod = b.period || "MONTHLY";
+
+      if (budgetPeriod === "MONTHLY") {
+        spentMinor = currentTransactions
+          .filter((t) => t.categoryId === b.categoryId)
+          .reduce((sum, t) => sum + t.amountMinor, 0);
+      } else if (budgetPeriod === "YEARLY") {
+        const startOfYearDate = new Date(Date.UTC(year, 0, 1));
+        const endOfYearDate = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
+        const yearTxns = await prisma.transaction.findMany({
+          where: {
+            userId,
+            categoryId: b.categoryId,
+            type: "EXPENSE",
+            date: { gte: startOfYearDate, lte: endOfYearDate },
+          },
+          select: { amountMinor: true },
+        });
+        spentMinor = yearTxns.reduce((sum, t) => sum + t.amountMinor, 0);
+      } else if (budgetPeriod === "WEEKLY") {
+        if (isCurrentPeriod) {
+          const weekTxns = await prisma.transaction.findMany({
+            where: {
+              userId,
+              categoryId: b.categoryId,
+              type: "EXPENSE",
+              date: { gte: startOfCurrentWeek, lte: endOfCurrentWeek },
+            },
+            select: { amountMinor: true },
+          });
+          spentMinor = weekTxns.reduce((sum, t) => sum + t.amountMinor, 0);
+        } else {
+          const totalMonthSpentMinor = currentTransactions
+            .filter((t) => t.categoryId === b.categoryId)
+            .reduce((sum, t) => sum + t.amountMinor, 0);
+          const daysInMonth = new Date(Date.UTC(year, month, 0)).getDate();
+          spentMinor = Math.round((totalMonthSpentMinor * 7) / daysInMonth);
+        }
+      }
 
       return {
         id: b.id,
         name: b.category.name,
-        spent: totalSpentMinor / 100,
+        spent: spentMinor / 100,
         limit: b.amountMinor / 100,
         icon: b.category.icon || "❓",
         color: b.category.color || "#4c4bc6",
+        period: budgetPeriod,
       };
-    });
+    }));
 
     // 7. Period Comparison
     const thisPeriod = currentTransactions.reduce((sum, t) => sum + t.amountMinor, 0) / 100;

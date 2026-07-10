@@ -25,7 +25,7 @@ describe("BudgetService Unit Tests", () => {
         name: "Unit Test Food",
         type: "EXPENSE",
         color: "#FF5733",
-        icon: "🍔",
+        icon: "restaurant",
       },
     });
     categoryId = category.id;
@@ -46,7 +46,7 @@ describe("BudgetService Unit Tests", () => {
         name: "Other Food",
         type: "EXPENSE",
         color: "#4ECDC4",
-        icon: "🚗",
+        icon: "directions_car",
       },
     });
     otherCategoryId = otherCategory.id;
@@ -111,6 +111,18 @@ describe("BudgetService Unit Tests", () => {
     await expect(
       BudgetService.setBudget(userId, "nonexistent-category-id", 20000)
     ).rejects.toThrow("CATEGORY_NOT_FOUND");
+  });
+
+  it("should successfully set and update budget period", async () => {
+    const budget = await BudgetService.setBudget(userId, categoryId, 40000, "WEEKLY");
+    expect(budget).not.toBeNull();
+    expect(budget?.amountMinor).toBe(40000);
+    expect(budget?.period).toBe("WEEKLY");
+
+    const dbBudget = await prisma.budget.findUnique({
+      where: { categoryId },
+    });
+    expect(dbBudget?.period).toBe("WEEKLY");
   });
 
   it("should delete the budget when passing null as amountMinor", async () => {
