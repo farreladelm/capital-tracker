@@ -1,7 +1,7 @@
 import { InputHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "prefix"> & {
   label?: ReactNode;
   prefix?: ReactNode;
   hint?: string;
