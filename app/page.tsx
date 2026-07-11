@@ -5,7 +5,9 @@ import { TransactionList } from "./components/TransactionList";
 import { formatCurrency } from "@/lib/format";
 import { BottomNav } from "./components/BottomNav";
 import Link from "next/link";
+import { BudgetService } from "@/lib/services/budget.service";
 import type { TransactionModel as Transaction, CategoryModel as Category } from "@/generated/prisma/models";
+
 
 type TransactionWithCategory = Transaction & {
   category: Category;
@@ -64,7 +66,14 @@ export default async function Dashboard() {
   const topExpense1 = expensesByCategory[0] || null;
   const topExpense2 = expensesByCategory[1] || null;
 
+  const totalBudgetMinor = await BudgetService.getMonthlyBudgetLimit(user.id);
+  const hasBudget = totalBudgetMinor > 0;
+  const budgetPercentage = hasBudget ? Math.round((totalExpense / totalBudgetMinor) * 100) : 0;
+  const remainingMinor = totalBudgetMinor - totalExpense;
+  const formattedRemaining = formatCurrency(remainingMinor, user.currency);
+
   return (
+
     <>
       {/* TopAppBar */}
       <header className="bg-background/80 dark:bg-background/80 backdrop-blur-xl fixed top-0 w-full flex justify-between items-center px-margin-page h-16 z-50">
@@ -96,14 +105,22 @@ export default async function Dashboard() {
             <h2 className="font-display text-on-background drop-shadow-sm">{formatCurrency(totalExpense, user.currency)}</h2>
           </div>
 
-          {/* Budget Bar (Visual Mock) */}
+          {/* Budget Bar */}
           <div className="w-full mt-4 bg-surface-container-high rounded-full h-2 overflow-hidden relative">
-            <div className="absolute top-0 left-0 h-full bg-primary rounded-full w-3/4"></div>
+            <div 
+              className="absolute top-0 left-0 h-full bg-primary rounded-full transition-all duration-300"
+              style={{ width: `${hasBudget ? Math.min((totalExpense / totalBudgetMinor) * 100, 100) : 0}%` }}
+            ></div>
           </div>
           <div className="flex justify-between w-full mt-2">
-            <span className="font-label-sm text-secondary">75% of budget</span>
-            <span className="font-label-sm text-secondary">$850 remaining</span>
+            <span className="font-label-sm text-secondary">
+              {hasBudget ? `${budgetPercentage}% of budget` : "No budget set"}
+            </span>
+            <span className="font-label-sm text-secondary">
+              {hasBudget ? `${formattedRemaining} remaining` : "--"}
+            </span>
           </div>
+
         </section>
 
         {/* Bento Grid: Categories & Insights */}

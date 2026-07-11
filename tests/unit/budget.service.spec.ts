@@ -139,4 +139,55 @@ describe("BudgetService Unit Tests", () => {
     const budgets = await BudgetService.getBudgets(userId);
     expect(budgets).toEqual([]);
   });
+
+  describe("getMonthlyBudgetLimit", () => {
+    it("should return 0 when no budgets are set", async () => {
+      const limit = await BudgetService.getMonthlyBudgetLimit(userId);
+      expect(limit).toBe(0);
+    });
+
+    it("should sum up multiple budgets with correct period scaling", async () => {
+      // Create a weekly budget: $100.00 / week -> should scale to $400.00 (40000 minor)
+      await BudgetService.setBudget(userId, categoryId, 10000, "WEEKLY");
+
+      // Create another category for monthly budget
+      const monthlyCategory = await prisma.category.create({
+        data: {
+          userId,
+          name: "Unit Test Rent",
+          type: "EXPENSE",
+          color: "#0000FF",
+          icon: "home",
+        },
+      });
+      // Monthly budget: $1200.00 / month -> should stay $1200.00 (120000 minor)
+      await BudgetService.setBudget(userId, monthlyCategory.id, 120000, "MONTHLY");
+
+      // Create a yearly budget category
+      const yearlyCategory = await prisma.category.create({
+        data: {
+          userId,
+          name: "Unit Test Insurance",
+          type: "EXPENSE",
+          color: "#00FF00",
+          icon: "shield",
+        },
+      });
+      // Yearly budget: $1200.00 / year -> should scale to $100.00 (10000 minor)
+      await BudgetService.setBudget(userId, yearlyCategory.id, 120000, "YEARLY");
+
+      // Total expected = (10000 * 4) + 120000 + Math.round(120000 / 12)
+      //                = 40000 + 120000 + 10000 = 170000
+      const limit = await BudgetService.getMonthlyBudgetLimit(userId);
+      expect(limit).toBe(170000);
+
+      // Cleanup extra categories
+      await prisma.category.deleteMany({
+        where: {
+          id: { in: [monthlyCategory.id, yearlyCategory.id] },
+        },
+      });
+    });
+  });
 });
+

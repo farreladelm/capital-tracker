@@ -81,4 +81,28 @@ export class BudgetService {
     TrendsService.clearCache(userId);
     return budget;
   }
+
+  /**
+   * Calculates the total monthly budget limit for a user.
+   * Weekly budgets are multiplied by 4, yearly budgets are divided by 12.
+   */
+  static async getMonthlyBudgetLimit(userId: string): Promise<number> {
+    const budgets = await prisma.budget.findMany({
+      where: { userId },
+    });
+
+    let totalBudgetMinor = 0;
+    budgets.forEach((budget) => {
+      if (budget.period === "WEEKLY") {
+        totalBudgetMinor += budget.amountMinor * 4;
+      } else if (budget.period === "YEARLY") {
+        totalBudgetMinor += Math.round(budget.amountMinor / 12);
+      } else {
+        totalBudgetMinor += budget.amountMinor;
+      }
+    });
+
+    return totalBudgetMinor;
+  }
 }
+
