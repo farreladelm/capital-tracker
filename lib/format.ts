@@ -15,9 +15,24 @@ export function formatCurrency(amountMinor: number, currencyCode: string) {
     SGD: "en-SG"
   };
 
+  const isZeroDecimal = ["JPY", "IDR"].includes(currencyCode);
+  const minDigits = isZeroDecimal ? 0 : (amount % 1 === 0 ? 0 : 2);
+  const maxDigits = isZeroDecimal ? 0 : 2;
+
   return new Intl.NumberFormat(locales[currencyCode] || "en-US", {
     style: "currency",
     currency: currencyCode,
-    maximumFractionDigits: 0, // Removes the .00 if the user doesn't want decimals
+    minimumFractionDigits: minDigits,
+    maximumFractionDigits: maxDigits,
   }).format(amount);
+}
+
+export function getTransactionAmountConfig(amountMinor: number, currencyCode: string) {
+  const isZeroDecimal = ["JPY", "IDR"].includes(currencyCode);
+  const fractionDigits = isZeroDecimal ? 0 : 2;
+  const amount = amountMinor / 100;
+  return {
+    defaultValue: amount.toFixed(fractionDigits),
+    step: isZeroDecimal ? "1" : "0.01",
+  };
 }

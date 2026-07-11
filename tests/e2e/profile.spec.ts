@@ -15,8 +15,8 @@ test.describe('Profile Page', () => {
     await expect(page.locator('p', { hasText: 'Manage your identity and settings' })).toBeVisible();
 
     // 3. Verify registered email and base currency are visible
-    await expect(page.locator('span', { hasText: 'Registered Email' })).toBeVisible();
-    await expect(page.locator('span', { hasText: 'Base Currency' })).toBeVisible();
+    await expect(page.locator('label', { hasText: 'Registered Email' })).toBeVisible();
+    await expect(page.locator('label', { hasText: 'Base Currency' })).toBeVisible();
 
     // 4. Update display name
     const nameInput = page.locator('input[name="name"]');

@@ -65,13 +65,13 @@ test.describe('Core User Flow', () => {
     await page.locator('text=coffee').first().click();
     await expect(page.locator('text=Edit Transaction')).toBeVisible();
 
-    console.log('Changing amount to $6.00...');
-    await page.fill('input[name="amount"]', '6.00');
+    console.log('Changing amount to $6.05...');
+    await page.fill('input[name="amount"]', '6.05');
     await page.click('button[type="submit"]:has-text("Save Changes")');
 
-    // Wait for modal to close and dashboard total spent to update to $6, and card to -$6
-    await expect(page.locator('text=$6').first()).toBeVisible({ timeout: 15000 });
-    await expect(page.locator('text=-$6').first()).toBeVisible({ timeout: 15000 });
+    // Wait for modal to close and dashboard total spent to update to $6.05, and card to -$6.05
+    await expect(page.locator('text=$6.05').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=-$6.05').first()).toBeVisible({ timeout: 15000 });
   });
 
   test('should delete the transaction', async () => {

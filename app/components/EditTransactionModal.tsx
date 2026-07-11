@@ -6,6 +6,7 @@ import { X, Trash2, Loader2 } from "lucide-react";
 import { updateTransaction, deleteTransaction } from "../actions/transaction";
 import { Select } from "./Select";
 import { Input } from "./Input";
+import { getTransactionAmountConfig } from "@/lib/format";
 
 type Transaction = {
   id: string;
@@ -43,6 +44,8 @@ export function EditTransactionModal({ isOpen, onClose, txn, categories, currenc
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const { defaultValue, step } = getTransactionAmountConfig(txn.amountMinor, currency);
 
   useEffect(() => {
     Promise.resolve().then(() => {
@@ -155,9 +158,9 @@ export function EditTransactionModal({ isOpen, onClose, txn, categories, currenc
             label={`Amount (${currency})`}
             name="amount"
             type="number"
-            step="0.01"
+            step={step}
             min="0"
-            defaultValue={(txn.amountMinor / 100).toFixed(2)}
+            defaultValue={defaultValue}
             required
             iconPrefix={currency}
             className="font-headline font-bold text-lg"

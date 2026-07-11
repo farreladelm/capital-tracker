@@ -25,7 +25,7 @@ export function Input({ label, iconPrefix, hint, className, type = "text", ...pr
           type={type}
           className={cn(
             "w-full rounded-2xl bg-surface py-3 px-4 text-sm font-body text-on-surface focus:outline-none border border-outline-variant/50 transition-all placeholder:text-on-surface-variant/40 focus:border-primary/50 focus:ring-1 focus:ring-primary/10 disabled:opacity-50",
-            iconPrefix && "pl-10",
+            iconPrefix && (typeof iconPrefix === "string" && iconPrefix.length > 1 ? "pl-14" : "pl-10"),
             className
           )}
           {...props}
