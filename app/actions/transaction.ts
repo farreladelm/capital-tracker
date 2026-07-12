@@ -66,19 +66,19 @@ export async function createTransaction(formData: FormData) {
   const amountMinor = Math.round(parseFloat(amountStr) * 100);
 
   try {
-    await TransactionService.createTransaction(session.user.id, {
+    const transaction = await TransactionService.createTransaction(session.user.id, {
       categoryId,
       amountMinor,
       description,
       date: new Date(dateStr),
     });
+    revalidatePath("/");
+    revalidatePath("/history");
+    return { success: true, transaction };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to create transaction";
     return { error: message };
   }
-
-  revalidatePath("/");
-  revalidatePath("/history");
-  return { success: true };
 }
+
 

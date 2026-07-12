@@ -87,5 +87,37 @@ test.describe('Core User Flow', () => {
     await expect(page.locator('text=coffee')).not.toBeVisible({ timeout: 15000 });
     await expect(page.locator('text=$0').first()).toBeVisible({ timeout: 15000 });
   });
+
+  test('should add a transaction manually via Add Transaction Modal', async () => {
+    console.log('Opening add transaction modal for manual input...');
+    await page.locator('nav button').filter({ hasText: 'add' }).click();
+
+    // Wait for the modal and click manual button
+    await page.waitForSelector('button[aria-label="Manual input"]');
+    await page.click('button[aria-label="Manual input"]');
+
+    // Wait for the manual form inputs
+    await page.waitForSelector('input[name="amount"]');
+    await page.fill('input[name="amount"]', '12.50');
+    await page.fill('input[name="description"]', 'lunch buffet');
+
+    // Select category
+    await page.click('button:has-text("Select category…")');
+    await page.click('button:has-text("Food")');
+
+    // Submit
+    console.log('Submitting manual transaction...');
+    await page.click('button[type="submit"]:has-text("Save Transaction")');
+
+    // Wait for success screen
+    await page.waitForSelector('h1:has-text("Expense Added")');
+
+    // Click Done to return to dashboard
+    await page.click('button:has-text("Done")');
+
+    // Wait for dashboard spent total to update to $12.50
+    await expect(page.locator('text=$12.50').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=-$12.50').first()).toBeVisible({ timeout: 15000 });
+  });
 });
 
