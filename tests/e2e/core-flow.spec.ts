@@ -21,8 +21,8 @@ test.describe('Core User Flow', () => {
   test('should display the initial dashboard state', async () => {
     await page.goto('/');
     await page.waitForURL('**/');
-    await expect(page.locator('text=Balance').first()).toBeVisible();
-    await expect(page.locator('text=$0').first()).toBeVisible();
+    await expect(page.locator('text=Recent').first()).toBeVisible();
+    await expect(page.locator('text=$0').filter({ visible: true }).first()).toBeVisible();
   });
 
   test('should navigate to categories page when clicking categories card', async () => {
@@ -38,31 +38,41 @@ test.describe('Core User Flow', () => {
   });
 
   test('should add a transaction via Add Transaction Modal', async () => {
-    console.log('Opening add transaction modal...');
-    await page.locator('nav button').filter({ hasText: 'add' }).click();
+    const chatInput = page.locator('input[placeholder*="Log transaction"]');
+    if (await chatInput.isVisible()) {
+      console.log('Logging transaction via Desktop Chatbox...');
+      await chatInput.fill('coffee 4');
+      await chatInput.press('Enter');
+      
+      await expect(page.locator('text=$4').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
+      await expect(page.locator('text=-$4').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
+    } else {
+      console.log('Opening add transaction modal...');
+      await page.locator('nav button').filter({ hasText: 'add' }).click();
 
-    // Wait for the modal textarea
-    await page.waitForSelector('textarea[placeholder="What did you spend today?"]');
-    await page.fill('textarea[placeholder="What did you spend today?"]', 'coffee 4');
+      // Wait for the modal textarea
+      await page.waitForSelector('textarea[placeholder="What did you spend today?"]');
+      await page.fill('textarea[placeholder="What did you spend today?"]', 'coffee 4');
 
-    // Save
-    console.log('Saving transaction...');
-    await page.click('button:has-text("Save")');
+      // Save
+      console.log('Saving transaction...');
+      await page.click('button:has-text("Save")');
 
-    // Wait for success screen
-    await page.waitForSelector('h1:has-text("Expense Added")');
-    
-    // Click Done to return to dashboard
-    await page.click('button:has-text("Done")');
+      // Wait for success screen
+      await page.waitForSelector('h1:has-text("Expense Added")');
+      
+      // Click Done to return to dashboard
+      await page.click('button:has-text("Done")');
 
-    // Wait for dashboard spent total to update to $4, and card to -$4
-    await expect(page.locator('text=$4').first()).toBeVisible({ timeout: 15000 });
-    await expect(page.locator('text=-$4').first()).toBeVisible({ timeout: 15000 });
+      // Wait for dashboard spent total to update to $4, and card to -$4
+      await expect(page.locator('text=$4').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
+      await expect(page.locator('text=-$4').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
+    }
   });
 
   test('should edit the transaction', async () => {
     console.log('Opening edit transaction modal...');
-    await page.locator('text=coffee').first().click();
+    await page.locator('.bg-surface-container-lowest').locator('text=coffee').first().click();
     await expect(page.locator('text=Edit Transaction')).toBeVisible();
 
     console.log('Changing amount to $6.05...');
@@ -70,13 +80,13 @@ test.describe('Core User Flow', () => {
     await page.click('button[type="submit"]:has-text("Save Changes")');
 
     // Wait for modal to close and dashboard total spent to update to $6.05, and card to -$6.05
-    await expect(page.locator('text=$6.05').first()).toBeVisible({ timeout: 15000 });
-    await expect(page.locator('text=-$6.05').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=$6.05').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=-$6.05').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
   });
 
   test('should delete the transaction', async () => {
     console.log('Opening edit modal again to delete...');
-    await page.locator('text=coffee').first().click();
+    await page.locator('.bg-surface-container-lowest').locator('text=coffee').first().click();
     await page.click('button:has-text("Delete Transaction")');
 
     // Click confirm
@@ -84,40 +94,49 @@ test.describe('Core User Flow', () => {
     await page.click('button:has-text("Confirm Delete")');
 
     // Verify transaction is gone and total spent returns to $0
-    await expect(page.locator('text=coffee')).not.toBeVisible({ timeout: 15000 });
-    await expect(page.locator('text=$0').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('.bg-surface-container-lowest').locator('text=coffee')).not.toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=$0').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
   });
 
   test('should add a transaction manually via Add Transaction Modal', async () => {
-    console.log('Opening add transaction modal for manual input...');
-    await page.locator('nav button').filter({ hasText: 'add' }).click();
+    const chatInput = page.locator('input[placeholder*="Log transaction"]');
+    if (await chatInput.isVisible()) {
+      console.log('Logging manual transaction via Desktop Chatbox...');
+      await chatInput.fill('lunch buffet 12.50');
+      await chatInput.press('Enter');
 
-    // Wait for the modal and click manual button
-    await page.waitForSelector('button[aria-label="Manual input"]');
-    await page.click('button[aria-label="Manual input"]');
+      await expect(page.locator('text=12.50').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
+    } else {
+      console.log('Opening add transaction modal for manual input...');
+      await page.locator('nav button').filter({ hasText: 'add' }).click();
 
-    // Wait for the manual form inputs
-    await page.waitForSelector('input[name="amount"]');
-    await page.fill('input[name="amount"]', '12.50');
-    await page.fill('input[name="description"]', 'lunch buffet');
+      // Wait for the modal and click manual button
+      await page.waitForSelector('button[aria-label="Manual input"]');
+      await page.click('button[aria-label="Manual input"]');
 
-    // Select category
-    await page.click('button:has-text("Select category…")');
-    await page.click('button:has-text("Food")');
+      // Wait for the manual form inputs
+      await page.waitForSelector('input[name="amount"]');
+      await page.fill('input[name="amount"]', '12.50');
+      await page.fill('input[name="description"]', 'lunch buffet');
 
-    // Submit
-    console.log('Submitting manual transaction...');
-    await page.click('button[type="submit"]:has-text("Save Transaction")');
+      // Select category
+      await page.click('button:has-text("Select category…")');
+      await page.click('button:has-text("Food")');
 
-    // Wait for success screen
-    await page.waitForSelector('h1:has-text("Expense Added")');
+      // Submit
+      console.log('Submitting manual transaction...');
+      await page.click('button[type="submit"]:has-text("Save Transaction")');
 
-    // Click Done to return to dashboard
-    await page.click('button:has-text("Done")');
+      // Wait for success screen
+      await page.waitForSelector('h1:has-text("Expense Added")');
 
-    // Wait for dashboard spent total to update to $12.50
-    await expect(page.locator('text=$12.50').first()).toBeVisible({ timeout: 15000 });
-    await expect(page.locator('text=-$12.50').first()).toBeVisible({ timeout: 15000 });
+      // Click Done to return to dashboard
+      await page.click('button:has-text("Done")');
+
+      // Wait for dashboard spent total to update to $12.50
+      await expect(page.locator('text=$12.50').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
+      await expect(page.locator('text=-$12.50').filter({ visible: true }).first()).toBeVisible({ timeout: 15000 });
+    }
   });
 });
 

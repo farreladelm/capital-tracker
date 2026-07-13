@@ -29,11 +29,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run build && PORT=3001 npm start',
+    command: 'npm run build && npm start',
     url: 'http://localhost:3001',
     reuseExistingServer: false, // Force a fresh build and server start every time
     timeout: 120 * 1000, // 2 minutes to allow for production build
     env: {
+      PORT: '3001',
       MOCK_AI: 'true',
     },
   },

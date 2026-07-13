@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from "sonner";
+import { DesktopHeader } from "@/app/components/DesktopHeader";
 
 export default function RootLayout({
   children,
@@ -45,6 +46,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col font-body-md bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container">
+        <DesktopHeader />
         <div className="relative z-10 flex-1 flex flex-col">
           {children}
         </div>

@@ -73,6 +73,7 @@
   --font-label-sm: var(--font-manrope), 'Manrope', sans-serif;
   --font-display: var(--font-manrope), 'Manrope', sans-serif;
   --font-body-lg: var(--font-manrope), 'Manrope', sans-serif;
+  --breakpoint-xs: 400px;
 }
 
 body {

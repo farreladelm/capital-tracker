@@ -48,23 +48,6 @@ export function CategoriesClient({
 
   return (
     <div className="flex min-h-screen flex-col text-on-surface pb-32">
-      {/* TopAppBar (Desktop) - Consistent with other pages */}
-      <header className="hidden md:flex justify-between items-center px-margin-page h-16 w-full z-50 fixed top-0 bg-background/80 dark:bg-background/80 backdrop-blur-xl border-b border-surface-variant/50">
-        <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary dark:text-primary-fixed">account_balance_wallet</span>
-          <span className="font-headline-md font-bold text-primary dark:text-primary-fixed">Balance</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link href="/" className="text-on-surface-variant hover:opacity-80 transition-opacity font-label-md">Home</Link>
-          <Link href="/history" className="text-on-surface-variant hover:opacity-80 transition-opacity font-label-md">History</Link>
-          <Link href="/trends" className="text-on-surface-variant hover:opacity-80 transition-opacity font-label-md">Trends</Link>
-          <Link href="/account" className="text-on-surface-variant hover:opacity-80 transition-opacity font-label-md">Profile</Link>
-        </div>
-        <div className="active-press transition-transform">
-          <span className="material-symbols-outlined text-on-surface-variant">notifications</span>
-        </div>
-      </header>
-
       {/* Main Content Area */}
       <MainContainer className="pt-8 md:pt-24 gap-stack-lg max-w-4xl mx-auto w-full">
         

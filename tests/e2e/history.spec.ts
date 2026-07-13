@@ -9,10 +9,8 @@ test.describe('History Page', () => {
     await page.goto('/history');
     await page.waitForURL('**/history');
 
-    // 1. Verify AppBar title is History
-    await expect(page.locator('h1', { hasText: 'History' })).toBeVisible();
+    // 1. Verify Search input is visible
 
-    // 2. Verify Search input is visible
     const searchInput = page.locator('input[placeholder="Search transactions…"]');
     await expect(searchInput).toBeVisible();
 

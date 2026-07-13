@@ -25,7 +25,7 @@ export default async function HistoryPage() {
   return (
     <div className="flex min-h-screen flex-col text-on-surface pb-32">
       {/* Top AppBar */}
-      <header className="bg-background/80 dark:bg-background/80 backdrop-blur-xl fixed top-0 w-full flex justify-center items-center h-16 z-50 px-margin-mobile md:px-margin-desktop">
+      <header className="md:hidden bg-background/80 dark:bg-background/80 backdrop-blur-xl fixed top-0 w-full flex justify-center items-center h-16 z-50 px-margin-mobile md:px-margin-desktop">
         <h1 className="font-headline-md font-bold text-primary dark:text-primary-fixed">
           History
         </h1>

@@ -1,98 +1,21 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
-import { BottomNav } from "@/app/components/BottomNav";
+import { useMemo } from "react";
 import { TrendChart } from "@/app/components/TrendChart";
 import { DonutChart } from "@/app/components/DonutChart";
 import Link from "next/link";
-import { MainContainer } from "@/app/components/MainContainer";
 import { Skeleton } from "@/app/components/Skeleton";
 import { MonthSelector } from "@/app/components/MonthSelector";
 import { formatCurrency } from "@/lib/utils";
+import { useTrendsData } from "./TrendsDataProvider";
 
-export default function TrendsPage() {
-  const [selectedMonth, setSelectedMonth] = useState(() => {
-    const months = ["jan", "feb", "mar", "apr", "may", "june", "july", "aug", "sept", "oct", "nov", "dec"];
-    return months[new Date().getUTCMonth()];
-  });
-  const [selectedYear, setSelectedYear] = useState(() => new Date().getUTCFullYear().toString());
-  const [isLoading, setIsLoading] = useState(true);
-  const [trendsData, setTrendsData] = useState<any>(null);
-  const trendsCacheRef = useRef<Record<string, any>>({});
-
-  useEffect(() => {
-    let active = true;
-    const cacheKey = `${selectedYear}-${selectedMonth}`;
-
-    if (trendsCacheRef.current[cacheKey]) {
-      setTrendsData(trendsCacheRef.current[cacheKey]);
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-
-    fetch(`/api/trends?month=${selectedMonth}&year=${selectedYear}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch trends");
-        return res.json();
-      })
-      .then((data) => {
-        if (active) {
-          trendsCacheRef.current[cacheKey] = data;
-          setTrendsData(data);
-          setIsLoading(false);
-
-          // Auto-align selected date parameters with available range if not yet set
-          if (data.activeMonthsByYear) {
-            const years = Object.keys(data.activeMonthsByYear).sort((a, b) => b.localeCompare(a));
-            if (years.length > 0) {
-              let targetYear = selectedYear;
-              if (!data.activeMonthsByYear[selectedYear]) {
-                targetYear = years[0];
-                setSelectedYear(years[0]);
-              }
-              const months = data.activeMonthsByYear[targetYear] || [];
-              if (months.length > 0 && !months.includes(selectedMonth)) {
-                setSelectedMonth(months[months.length - 1]);
-              }
-            }
-          }
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        if (active) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [selectedMonth, selectedYear]);
-
-  const handleMonthChange = (monthId: string) => {
-    if (monthId === selectedMonth) return;
-    setSelectedMonth(monthId);
-  };
-
-  const handleYearChange = (yearId: string) => {
-    if (yearId === selectedYear) return;
-
-    // Auto-align month if it's not active in the newly selected year to prevent double fetch
-    const activeMonthsInYear = trendsData?.activeMonthsByYear?.[yearId] || [];
-    if (activeMonthsInYear.length > 0 && !activeMonthsInYear.includes(selectedMonth)) {
-      setSelectedMonth(activeMonthsInYear[activeMonthsInYear.length - 1]);
-    }
-    setSelectedYear(yearId);
-  };
+export function DesktopTrendsSection() {
+  const { selectedMonth, setSelectedMonth, selectedYear, setSelectedYear, trendsData, isLoading } = useTrendsData();
 
   const budgetsWithStatus = useMemo(() => {
     if (!trendsData?.budgets) return [];
     const userCurrency = trendsData.currency || "USD";
     const userLocale = trendsData.locale || "en-US";
-
 
     const getStatusText = (spent: number, limit: number, period: string) => {
       const diff = limit - spent;
@@ -149,91 +72,51 @@ export default function TrendsPage() {
   const userLocale = trendsData?.locale || "en-US";
 
   return (
-    <>
-      {/* Main Content */}
-      <MainContainer className="pt-8 md:pt-24 gap-stack-lg max-w-4xl mx-auto">
-        
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <section className="text-left flex flex-col gap-1">
-            <span className="font-label-sm text-primary uppercase tracking-wider">Overview</span>
-            <h1 className="font-headline-lg-mobile md:font-headline-lg text-on-surface">Analytics</h1>
-          </section>
+    <div id="trends" className="hidden md:flex flex-col gap-stack-lg lg:col-span-12 border-t border-surface-variant/40 pt-12 mt-12 scroll-mt-20 text-on-surface">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <section className="text-left flex flex-col gap-1">
+          <span className="font-label-sm text-primary uppercase tracking-wider">Overview</span>
+          <h2 className="font-headline-lg text-on-surface">Analytics & Trends</h2>
+        </section>
 
-          <MonthSelector 
-            selectedMonth={selectedMonth} 
-            onMonthChange={handleMonthChange} 
-            selectedYear={selectedYear} 
-            onYearChange={handleYearChange} 
-            activeMonthsByYear={trendsData?.activeMonthsByYear}
-          />
-        </div>
+        <MonthSelector 
+          selectedMonth={selectedMonth} 
+          onMonthChange={setSelectedMonth} 
+          selectedYear={selectedYear} 
+          onYearChange={setSelectedYear} 
+          activeMonthsByYear={trendsData?.activeMonthsByYear}
+        />
+      </div>
 
-        {trendsData && !trendsData.hasTransactions ? (
-          <div className="flex flex-col items-center justify-center text-center p-8 md:p-16 border border-outline-variant bg-surface-container-lowest/80 rounded-3xl gap-5 relative overflow-hidden shadow-sm">
-            {/* Subtle ambient glow matching our brand colors */}
-            <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-tertiary/5 rounded-full blur-3xl pointer-events-none" />
-            
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 border border-primary/25">
-              <span className="material-symbols-outlined text-[32px] text-primary select-none font-light animate-pulse">
-                insights
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-2 max-w-sm">
-              <h3 className="font-headline-sm text-on-surface font-bold">No analytics data yet</h3>
-              <p className="font-body-md text-on-surface-variant">
-                Once you log your first income or expense, your monthly trends, category distributions, and AI-powered insights will appear here.
-              </p>
-            </div>
-
-            <div className="mt-2 flex flex-col items-center gap-2">
-              <span className="font-label-sm text-secondary/70">
-                Tap the <strong className="text-primary font-bold">+</strong> button below to log your first transaction
-              </span>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Insights Bento Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {trendsData && !trendsData.hasTransactions ? (
+        <div className="flex flex-col items-center justify-center text-center p-8 md:p-16 border border-outline-variant bg-surface-container-lowest/80 rounded-3xl gap-5 relative overflow-hidden shadow-sm">
+          <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-tertiary/5 rounded-full blur-3xl pointer-events-none" />
           
-          {/* AI Insights Card */}
-          <div className="relative overflow-hidden md:col-span-3 bg-gradient-to-br from-primary/10 via-tertiary/10 to-surface-container-lowest/90 dark:from-primary/15 dark:via-tertiary/10 dark:to-background border border-primary/25 dark:border-primary/20 rounded-2xl p-5 shadow-sm flex items-start gap-4">
-            {/* Glowing AI Blobs matching our design system (Primary & Tertiary) */}
-            <div className="absolute top-[-50px] right-[-50px] w-[200px] h-[200px] rounded-full bg-tertiary/20 dark:bg-tertiary/15 blur-3xl pointer-events-none" />
-            <div className="absolute bottom-[-40px] left-[-40px] w-[150px] h-[150px] rounded-full bg-primary/20 dark:bg-primary/15 blur-2xl pointer-events-none" />
-
-            <span className="material-symbols-outlined shrink-0 text-[20px] select-none mt-0.5 animate-pulse bg-gradient-to-r from-primary to-tertiary bg-clip-text text-transparent font-bold">
-              auto_awesome
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 border border-primary/25">
+            <span className="material-symbols-outlined text-[32px] text-primary select-none font-light animate-pulse">
+              insights
             </span>
-            <div className="flex flex-col gap-1.5 text-left relative z-10">
-              <span className="font-label-sm uppercase tracking-wider font-extrabold bg-gradient-to-r from-primary to-tertiary dark:from-primary-fixed dark:to-tertiary-fixed bg-clip-text text-transparent font-bold">
-                AI Insight
-              </span>
-              {isLoading ? (
-                <div className="flex flex-col gap-2 mt-1.5 min-w-[200px]">
-                  <Skeleton className="h-3.5 w-full bg-tertiary/15" />
-                  <Skeleton className="h-3.5 w-5/6 bg-tertiary/15" />
-                </div>
-              ) : (
-                <p className="text-[13.5px] text-on-surface-variant/90 dark:text-on-surface-variant font-medium leading-relaxed mt-0.5">
-                  {trendsData?.aiInsight}
-                </p>
-              )}
-            </div>
           </div>
-          
+
+          <div className="flex flex-col gap-2 max-w-sm">
+            <h3 className="font-headline-sm text-on-surface font-bold">No analytics data yet</h3>
+            <p className="font-body-md text-on-surface-variant">
+              Log transactions first to see your monthly trends, category distribution, and AI insights.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Spending Trend (Line Chart) */}
           <div className="md:col-span-2 bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow flex flex-col">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="font-headline-md text-on-surface">Spending Trend</h2>
+              <h3 className="font-headline-md text-on-surface">Spending Trend</h3>
             </div>
             
             {isLoading ? (
               <div className="flex-grow flex flex-col justify-between min-h-[250px] py-2">
-                {/* Fake grid lines skeleton */}
                 <div className="w-full flex-grow flex flex-col justify-between pb-6 pt-2">
                   <Skeleton className="h-[1.5px] w-full" />
                   <Skeleton className="h-[1.5px] w-full" />
@@ -241,7 +124,6 @@ export default function TrendsPage() {
                   <Skeleton className="h-[1.5px] w-full" />
                   <Skeleton className="h-[1.5px] w-full" />
                 </div>
-                {/* Fake X-axis labels skeleton */}
                 <div className="flex justify-between px-2">
                   <Skeleton className="h-3 w-8" />
                   <Skeleton className="h-3 w-8" />
@@ -257,14 +139,12 @@ export default function TrendsPage() {
             )}
           </div>
 
-
           {/* Category Distribution (Donut Chart) */}
           <div className="bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow flex flex-col">
-            <h2 className="font-headline-md text-on-surface mb-6">Categories</h2>
+            <h3 className="font-headline-md text-on-surface mb-6">Categories</h3>
             
             {isLoading ? (
               <div className="flex-grow w-full flex flex-col items-center justify-center min-h-[300px]">
-                {/* Donut Chart Skeleton */}
                 <div className="relative w-44 h-44 mb-8 shrink-0 flex items-center justify-center">
                   <div className="w-36 h-36 rounded-full border-[14px] border-surface-variant/20 animate-pulse" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -272,7 +152,6 @@ export default function TrendsPage() {
                     <Skeleton className="h-4 w-16" />
                   </div>
                 </div>
-                {/* Legend Skeleton */}
                 <div className="w-full grid grid-cols-1 gap-4 px-2">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="flex items-center justify-between w-full">
@@ -296,7 +175,7 @@ export default function TrendsPage() {
           <div className="bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow flex flex-col justify-between min-h-[300px]">
             <div>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="font-headline-md text-on-surface">Comparison</h2>
+                <h3 className="font-headline-md text-on-surface">Comparison</h3>
                 
                 {isLoading ? (
                   <Skeleton className="h-5 w-16 rounded-full" />
@@ -342,7 +221,6 @@ export default function TrendsPage() {
               )}
             </div>
 
-            {/* Pace Details grid */}
             <div className="border-t border-surface-variant/40 pt-4 flex flex-col gap-3">
               <div className="flex justify-between items-center text-xs">
                 <span className="text-secondary font-medium">Daily Burn Rate</span>
@@ -367,10 +245,10 @@ export default function TrendsPage() {
             </div>
           </div>
 
-          {/* Budget Progress Card inside Bento Grid */}
+          {/* Budget Progress Card */}
           <div className="md:col-span-2 bg-surface-container-lowest rounded-xl p-container-padding soft-card-shadow flex flex-col justify-between">
             <div className="flex flex-col flex-grow">
-              <h2 className="font-headline-md text-on-surface mb-5">Budgets</h2>
+              <h3 className="font-headline-md text-on-surface mb-5">Budgets</h3>
               {isLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-7 flex-grow">
                   {[1, 2, 3, 4].map((i) => (
@@ -400,63 +278,40 @@ export default function TrendsPage() {
                       <div key={budget.id} className="flex flex-col gap-3">
                         <div className="flex justify-between items-start">
                           <div className="flex items-center gap-3">
-                            <span 
-                              className={`material-symbols-outlined shrink-0 text-[16px] leading-none ${budget.iconColor}`}
-                              style={{ fontVariationSettings: budget.iconFill ? '"FILL" 1' : '"FILL" 0' }}
-                            >
+                            <span className={`material-symbols-outlined ${budget.iconColor}`} style={{ fontVariationSettings: `"FILL" ${budget.iconFill ? 1 : 0}` }}>
                               {budget.iconName}
                             </span>
-                            <div>
-                              <h3 className="text-[14px] font-bold text-on-surface leading-tight">{budget.name}</h3>
-                              <p className="text-[11px] font-medium text-secondary mt-0.5 leading-none font-body">
-                                {budget.statusText}
-                              </p>
+                            <div className="flex flex-col text-left">
+                              <span className="font-label-md font-semibold text-on-surface">{budget.categoryName}</span>
+                              <span className={`font-label-sm ${budget.statusColor}`}>{budget.statusText}</span>
                             </div>
                           </div>
-                          <div className="flex items-baseline gap-0.5 text-on-surface">
-                            <span className="text-[14px] font-bold">
+                          <div className="flex items-baseline gap-1 text-xs">
+                            <span className="font-semibold text-on-surface">
                               {formatCurrency(budget.spent, userCurrency, { locale: userLocale, compact: true })}
                             </span>
-                            <span className="text-[10px] font-medium text-secondary">
+                            <span className="text-secondary">
                               / {formatCurrency(budget.limit, userCurrency, { locale: userLocale, compact: true })}
-                              {budget.period === "WEEKLY" ? " / wk" : budget.period === "YEARLY" ? " / yr" : " / mo"}
                             </span>
                           </div>
                         </div>
-                        
-                        {/* Micro Progress Bar */}
-                        <div className="w-full bg-surface-variant/50 rounded-full h-1.5">
-                          <div 
-                            className={`${budget.barColor} h-1.5 rounded-full transition-all duration-500`} 
-                            style={{ width: `${Math.min((budget.spent / budget.limit) * 100, 100)}%` }}
-                          ></div>
+                        <div className="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+                          <div className={`h-full rounded-full ${budget.barColor}`} style={{ width: `${Math.min((budget.spent / budget.limit) * 100, 100)}%` }}></div>
                         </div>
                       </div>
                     );
                   })}
+                  {budgetsWithStatus.length === 0 && (
+                    <div className="flex-grow flex items-center justify-center py-4">
+                      <span className="font-label-md text-secondary">No budgets defined.</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-
-            {/* Action Footer to absorb grid stretch and anchor layout */}
-            <div className="mt-6 pt-4 border-t border-surface-variant/40 flex justify-between items-center">
-              <span className="text-[10px] text-secondary font-medium uppercase tracking-wider">
-                {isLoading ? "Loading budgets..." : `${budgetsWithStatus.length} active budget${budgetsWithStatus.length !== 1 ? "s" : ""}`}
-              </span>
-              <Link href="/settings" className="text-xs font-semibold text-primary hover:opacity-85 transition-opacity flex items-center gap-1 active-press">
-                Manage Budgets
-                <span className="material-symbols-outlined text-[16px] leading-none">arrow_forward</span>
-              </Link>
-            </div>
           </div>
-
         </div>
-        </>
-        )}
-
-      </MainContainer>
-
-      <BottomNav />
-    </>
+      )}
+    </div>
   );
 }
